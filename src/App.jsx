@@ -4,6 +4,10 @@ import {
   Routes,
   Navigate,
 } from 'react-router-dom';
+import {
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query';
 import GlobalSyles from './styles/GlobalStyles';
 import Dashboard from './pages/Dashboard';
 import Bookings from './pages/Bookings';
@@ -14,11 +18,20 @@ import Account from './pages/Account';
 import Login from './pages/Login';
 import PageNotFound from './pages/PageNotFound';
 import AppLayout from './ui/AppLayout';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+
+// staleTime is amount of the the data will be store in RQ cache.
+const queryClient = new QueryClient({
+  // data will always be fetched when it changes
+  defaultOptions: { queries: { staleTime: 0 } },
+  // defaultOptions: { queries: { staleTime: 60 * 1000 } },
+});
 
 // DECLARATIVE WAY OF SETTING UP ROUTES - We don't need to use useLoaders like in the pizza app so we are using the route setup
 function App() {
   return (
-    <>
+    <QueryClientProvider client={queryClient}>
+      <ReactQueryDevtools initialIsOpen={false} />
       <GlobalSyles />
       <BrowserRouter>
         <Routes>
@@ -40,7 +53,7 @@ function App() {
           <Route path='*' element={<PageNotFound />} />
         </Routes>
       </BrowserRouter>
-    </>
+    </QueryClientProvider>
   );
 }
 
