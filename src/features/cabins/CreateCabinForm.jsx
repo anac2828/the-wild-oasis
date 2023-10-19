@@ -1,8 +1,7 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
-import toast from 'react-hot-toast';
 //
-import { createEditCabin } from '../../services/apiCabins';
+import { useCreateCabin } from './useCreateCabin';
+import { useEditCabin } from './useEditCabin';
 //
 import FormRow from '../../ui/FormRow';
 import Input from '../../ui/Input';
@@ -12,51 +11,18 @@ import FileInput from '../../ui/FileInput';
 import Textarea from '../../ui/Textarea';
 
 function CreateCabinForm({ cabinToEdit = {} }) {
+  const { isCreating, createCabin } = useCreateCabin();
+  const { isEditing, editCabin } = useEditCabin();
+  // to get access to form data when it is submitted
+  const { register, reset, handleSubmit, getValues, formState } = useForm({
+    // To prefill form fields when editing a cabin
+    defaultValues: isEditSession ? editValues : {},
+  });
+  const errors = formState.errors;
   // received from CabinRow
   const { id: editId, ...editValues } = cabinToEdit;
   // True if there is an editId
   const isEditSession = Boolean(editId);
-
-  // to get access to form data when it is submitted
-  const { register, reset, handleSubmit, getValues, formState } = useForm({
-    defaultValues: isEditSession ? editValues : {},
-  });
-
-  const errors = formState.errors;
-
-  // for the table component to re-render when a new cabin is added with form
-  const queryClient = useQueryClient();
-
-  // CREATE CABIN useMutation //
-  // to connect createCabin to react-query
-  const { mutate: createCabin, isLoading: isCreating } = useMutation({
-    mutationFn: createEditCabin,
-    onSuccess: () => {
-      toast.success('New cabin successfully created');
-      // Table will be re-render
-      queryClient.invalidateQueries({ queryKey: ['cabins'] });
-      // clears form fields
-      reset();
-    },
-    // error meesage comes from createCabin
-    onError: (err) => toast.error(err.message),
-  });
-
-  // to connect createCabin to react-query
-  const { mutate: editCabin, isLoading: isEditing } = useMutation({
-    // mutationFn can only receive one artugment. Use object to combaine arguments
-    mutationFn: ({ newCabinData, id }) => createEditCabin(newCabinData, id),
-    onSuccess: () => {
-      toast.success('Cabin has been successfully edited');
-      // Table will be re-render
-      queryClient.invalidateQueries({ queryKey: ['cabins'] });
-      // clears form fields
-      reset();
-    },
-    // error meesage comes from createCabin
-    onError: (err) => toast.error(err.message),
-  });
-
   const isWorking = isCreating || isEditing;
 
   function onSubmit(data) {
@@ -64,8 +30,12 @@ function CreateCabinForm({ cabinToEdit = {} }) {
     // Form fields need to match the fields in supabase. Replace data.image[0] with image: data.image[0]
     const image = typeof data.image === 'string' ? data.image : data.image[0];
 
-    if (isEditSession) editCabin({ newCabinData: { ...data, image }, id: editId });
-    else createCabin({ ...data, image: image });
+    if (isEditSession)
+      editCabin(
+        { newCabinData: { ...data, image }, id: editId },
+        { onSuccess: () => reset() }
+      );
+    else createCabin({ ...data, image: image }, { onSuccess: () => reset() });
   }
 
   return (
