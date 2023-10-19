@@ -29,6 +29,7 @@ const TableHeader = styled.header`
 `;
 
 function CabinTable() {
+  // fetches cabins from supabase using react-query
   const {
     isLoading,
     data: cabins,
@@ -37,9 +38,9 @@ function CabinTable() {
     queryKey: ['cabins'],
     queryFn: getCabins,
   });
-  console.log(error);
-  if (isLoading) return <Spinner />;
 
+  if (isLoading) return <Spinner />;
+  console.log(error);
   return (
     <Table role='table'>
       <TableHeader role='row'>
