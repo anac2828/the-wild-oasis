@@ -10,7 +10,11 @@ import Button from '../../ui/Button';
 import FileInput from '../../ui/FileInput';
 import Textarea from '../../ui/Textarea';
 
-function CreateCabinForm({ cabinToEdit = {} }) {
+function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
+  // received from CabinRow
+  const { id: editId, ...editValues } = cabinToEdit;
+  // True if there is an editId
+  const isEditSession = Boolean(editId);
   const { isCreating, createCabin } = useCreateCabin();
   const { isEditing, editCabin } = useEditCabin();
   // to get access to form data when it is submitted
@@ -19,10 +23,6 @@ function CreateCabinForm({ cabinToEdit = {} }) {
     defaultValues: isEditSession ? editValues : {},
   });
   const errors = formState.errors;
-  // received from CabinRow
-  const { id: editId, ...editValues } = cabinToEdit;
-  // True if there is an editId
-  const isEditSession = Boolean(editId);
   const isWorking = isCreating || isEditing;
 
   function onSubmit(data) {
@@ -33,13 +33,27 @@ function CreateCabinForm({ cabinToEdit = {} }) {
     if (isEditSession)
       editCabin(
         { newCabinData: { ...data, image }, id: editId },
-        { onSuccess: () => reset() }
+        {
+          onSuccess: () => {
+            reset();
+          },
+        }
       );
-    else createCabin({ ...data, image: image }, { onSuccess: () => reset() });
+    else
+      createCabin(
+        { ...data, image: image },
+        {
+          onSuccess: () => {
+            reset();
+            onCloseModal?.();
+          },
+        }
+      );
   }
 
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    // Type prop is to style the form if it inside a modal.
+    <Form onSubmit={handleSubmit(onSubmit)} type={onCloseModal ? 'modal' : 'regular'}>
       <FormRow label={'Cabin name'} error={errors?.name?.message}>
         <Input
           type='text'
@@ -119,7 +133,7 @@ function CreateCabinForm({ cabinToEdit = {} }) {
 
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button $variation='secondary' type='reset'>
+        <Button $variation='secondary' type='reset' onClick={() => onCloseModal?.()}>
           Cancel
         </Button>
         <Button disabled={isWorking}>

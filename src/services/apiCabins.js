@@ -1,5 +1,6 @@
 import supabase, { supabaseUrl } from './supabase';
 
+// ** GET CABINS ** //
 export async function getCabins() {
   // this will fetch the cabins data from supabase. "*" selects all fields
   let { data: cabins, error } = await supabase.from('cabins').select('*');
@@ -12,6 +13,7 @@ export async function getCabins() {
   return cabins;
 }
 
+// ** EDIT CABIN ** //
 export async function createEditCabin(newCabin, id) {
   // If the image field has a supabaseURL no new image was uploaded
   const hasImagePath = newCabin.image?.startsWith?.(supabaseUrl);
@@ -50,6 +52,9 @@ export async function createEditCabin(newCabin, id) {
   }
 
   // 2 - upload image
+  // will not upload image if there is one alrady when duplicating a cabin
+  if (hasImagePath) return data;
+
   const { error: storageError } = await supabase.storage
     .from('cabin-images')
     // newCabin.image is the actual image
@@ -63,6 +68,8 @@ export async function createEditCabin(newCabin, id) {
 
   return data;
 }
+
+// ** DELETE CABIN ** //
 
 export async function deleteCabin(id) {
   const { data, error } = await supabase.from('cabins').delete().eq('id', id);

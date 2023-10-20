@@ -34,7 +34,7 @@ function CabinTable() {
   const { isLoading, error, cabins } = useCabins();
 
   if (isLoading) return <Spinner />;
-  console.log(error);
+
   return (
     <Table role='table'>
       <TableHeader role='row'>
