@@ -10,6 +10,7 @@ import Button from '../../ui/Button';
 import FileInput from '../../ui/FileInput';
 import Textarea from '../../ui/Textarea';
 
+// close onCloseModal is the close function that comes from the Modal Context component
 function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
   // received from CabinRow
   const { id: editId, ...editValues } = cabinToEdit;
@@ -36,6 +37,7 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
         {
           onSuccess: () => {
             reset();
+            onCloseModal?.();
           },
         }
       );
@@ -52,7 +54,7 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
   }
 
   return (
-    // Type prop is to style the form if it inside a modal.
+    // Type prop is to style the form if it inside a modal. handleSubmit
     <Form onSubmit={handleSubmit(onSubmit)} type={onCloseModal ? 'modal' : 'regular'}>
       <FormRow label={'Cabin name'} error={errors?.name?.message}>
         <Input
