@@ -22,9 +22,11 @@ function CabinTable() {
         <div>Discount</div>
         <div></div>
       </Table.Header>
-      {cabins.map((cabin) => (
-        <CabinRow key={cabin.id} cabin={cabin} />
-      ))}
+      {/* makes Table.Body component cleaner  */}
+      <Table.Body
+        data={cabins}
+        render={(cabin) => <CabinRow key={cabin.id} cabin={cabin} />}
+      />
     </Table>
   );
 }
