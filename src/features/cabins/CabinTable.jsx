@@ -1,6 +1,5 @@
-import styled from 'styled-components';
-//
 import { useCabins } from './useCabins';
+import { useSearchParams } from 'react-router-dom';
 //
 import Spinner from '../../ui/Spinner';
 import CabinRow from './CabinRow';
@@ -9,10 +8,20 @@ import Menus from '../../ui/Menus';
 
 function CabinTable() {
   // fetches cabins from supabase using react-query
-  const { isLoading, error, cabins } = useCabins();
+  const { isLoading, cabins } = useCabins();
+  const [searchParams] = useSearchParams();
 
   if (isLoading) return <Spinner />;
 
+  // FILTER CABINS
+  const filterValue = searchParams.get('discount') || 'all';
+
+  let filteredCabins;
+  if (filterValue === 'all') filteredCabins = cabins;
+  if (filterValue === 'no-discount')
+    filteredCabins = cabins.filter((cabin) => cabin.discount === 0);
+  if (filterValue === 'with-discount')
+    filteredCabins = cabins.filter((cabin) => cabin.discount > 0);
   return (
     // Table needs to be wrapped in menus component because only one menu can be displayed at a time
     <Menus>
@@ -27,7 +36,7 @@ function CabinTable() {
         </Table.Header>
         {/* makes Table.Body component cleaner  */}
         <Table.Body
-          data={cabins}
+          data={filteredCabins}
           render={(cabin) => <CabinRow key={cabin.id} cabin={cabin} />}
         />
       </Table>
