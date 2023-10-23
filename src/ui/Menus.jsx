@@ -2,6 +2,7 @@ import { createContext, useContext, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { HiEllipsisVertical } from 'react-icons/hi2';
 import styled from 'styled-components';
+import { useCloseModal } from '../hooks/useCloseModal';
 
 const Menu = styled.div`
   display: flex;
@@ -106,20 +107,28 @@ function Toggle({ id }) {
 
 // If openId matches the id of the cabin clicked on, the List component with the buttons will be displayed
 function List({ id, children }) {
-  const { openId, position } = useContext(MenusContext);
+  const { openId, position, close } = useContext(MenusContext);
+
+  const ref = useCloseModal(close);
 
   if (openId !== id) return null;
 
   return createPortal(
-    <StyledList $position={{ x: position.x, y: position.y }}>{children}</StyledList>,
+    <StyledList $position={{ x: position.x, y: position.y }} ref={ref}>
+      {children}
+    </StyledList>,
     document.body
   );
 }
 
+// onClick comes from the Cabin row
 function Button({ children, icon, onClick }) {
+  const { close } = useContext(MenusContext);
   function handleClick() {
-    onClick;
+    onClick?.();
+    close();
   }
+
   return (
     <li>
       <StyledButton onClick={handleClick}>
