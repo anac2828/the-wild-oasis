@@ -88,13 +88,16 @@ function Toggle({ id }) {
   const { openId, close, open, setPostion } = useContext(MenusContext);
 
   function handleClick(e) {
+    // gets info of button clicked on to set the position on the window
     const rect = e.target.closest('button').getBoundingClientRect();
 
+    // determines the position of the menus window
     setPostion({
       x: window.innerWidth - rect.width - rect.x,
       y: rect.y + rect.height + 8,
     });
 
+    // if openID is an empty string or it is not the same as the ID it will open the menus window otherwise it will close it
     openId === '' || openId !== id ? open(id) : close();
   }
 

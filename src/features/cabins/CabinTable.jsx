@@ -1,10 +1,11 @@
 import { useCabins } from './useCabins';
 import { useSearchParams } from 'react-router-dom';
 //
-import Spinner from '../../ui/Spinner';
 import CabinRow from './CabinRow';
+import Spinner from '../../ui/Spinner';
 import Table from '../../ui/Table';
 import Menus from '../../ui/Menus';
+import Empty from '../../ui/Empty';
 
 function CabinTable() {
   // fetches cabins from supabase using react-query
@@ -12,8 +13,10 @@ function CabinTable() {
   const [searchParams] = useSearchParams();
 
   if (isLoading) return <Spinner />;
+  if (!cabins.length) return <Empty resourceName='bookings' />;
 
-  // FILTER CABINS
+  //****** FILTER CABINS ****** //
+  // gets the value from the URL which is store by the filter component in the CabintableOperations
   const filterValue = searchParams.get('discount') || 'all';
 
   let filteredCabins;
@@ -22,6 +25,15 @@ function CabinTable() {
     filteredCabins = cabins.filter((cabin) => cabin.discount === 0);
   if (filterValue === 'with-discount')
     filteredCabins = cabins.filter((cabin) => cabin.discount > 0);
+
+  //******  SORT ******** //
+  const sortBy = searchParams.get('sortBy') || 'startDate-asc';
+  // renames the array fields retured by split()
+  const [field, direction] = sortBy.split('-');
+
+  const modifier = direction === 'asc' ? 1 : -1;
+  const sortedCabins = filteredCabins.sort((a, b) => (a[field] - b[field]) * modifier);
+
   return (
     // Table needs to be wrapped in menus component because only one menu can be displayed at a time
     <Menus>
@@ -36,7 +48,8 @@ function CabinTable() {
         </Table.Header>
         {/* makes Table.Body component cleaner  */}
         <Table.Body
-          data={filteredCabins}
+          // data={filteredCabins}
+          data={sortedCabins}
           render={(cabin) => <CabinRow key={cabin.id} cabin={cabin} />}
         />
       </Table>
