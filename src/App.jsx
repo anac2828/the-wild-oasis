@@ -1,13 +1,5 @@
-import {
-  BrowserRouter,
-  Route,
-  Routes,
-  Navigate,
-} from 'react-router-dom';
-import {
-  QueryClient,
-  QueryClientProvider,
-} from '@tanstack/react-query';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { Toaster } from 'react-hot-toast';
 //
 import GlobalSyles from './styles/GlobalStyles';
@@ -21,6 +13,7 @@ import Login from './pages/Login';
 import PageNotFound from './pages/PageNotFound';
 import AppLayout from './ui/AppLayout';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import Booking from './pages/Booking';
 
 // staleTime is amount of the the data will be store in RQ cache.
 const queryClient = new QueryClient({
@@ -42,12 +35,10 @@ function App() {
         <Routes>
           <Route element={<AppLayout />}>
             {/* An index route is needed */}
-            <Route
-              index
-              element={<Navigate replace to='dashboard' />}
-            />
+            <Route index element={<Navigate replace to='dashboard' />} />
             <Route path='dashboard' element={<Dashboard />} />
             <Route path='bookings' element={<Bookings />} />
+            <Route path='bookings/:bookingId' element={<Booking />} />
             <Route path='cabins' element={<Cabins />} />
             <Route path='users' element={<Users />} />
             <Route path='settings' element={<Settings />} />
