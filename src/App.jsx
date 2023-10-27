@@ -5,7 +5,9 @@ import { Toaster } from 'react-hot-toast';
 import GlobalSyles from './styles/GlobalStyles';
 import Dashboard from './pages/Dashboard';
 import Bookings from './pages/Bookings';
+import Booking from './pages/Booking';
 import Cabins from './pages/Cabins';
+import Checkin from './pages/Checkin';
 import Users from './pages/Users';
 import Settings from './pages/Settings';
 import Account from './pages/Account';
@@ -13,7 +15,6 @@ import Login from './pages/Login';
 import PageNotFound from './pages/PageNotFound';
 import AppLayout from './ui/AppLayout';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import Booking from './pages/Booking';
 
 // staleTime is amount of the the data will be store in RQ cache.
 const queryClient = new QueryClient({
@@ -25,7 +26,7 @@ const queryClient = new QueryClient({
 // DECLARATIVE WAY OF SETTING UP ROUTES - We don't need to use useLoaders like in the pizza app so we are using the route setup
 function App() {
   return (
-    // Data provider
+    // Data provider with React-query
     <QueryClientProvider client={queryClient}>
       {/* Browser dev tools */}
       <ReactQueryDevtools initialIsOpen={false} />
@@ -40,6 +41,7 @@ function App() {
             <Route path='bookings' element={<Bookings />} />
             <Route path='bookings/:bookingId' element={<Booking />} />
             <Route path='cabins' element={<Cabins />} />
+            <Route path='checkin/:bookingId' element={<Checkin />} />
             <Route path='users' element={<Users />} />
             <Route path='settings' element={<Settings />} />
             <Route path='account' element={<Account />} />

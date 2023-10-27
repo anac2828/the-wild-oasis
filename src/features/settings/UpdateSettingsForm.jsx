@@ -22,6 +22,7 @@ function UpdateSettingsForm() {
   if (isLoading) return <Spinner />;
 
   function handleUpdate(value, field) {
+    console.log(value, field);
     if (!value) return;
     updateSetting({ [field]: value });
   }
@@ -38,13 +39,31 @@ function UpdateSettingsForm() {
         />
       </FormRow>
       <FormRow label='Maximum nights/booking'>
-        <Input type='number' id='max-nights' defaultValue={maxBookingLength} />
+        <Input
+          type='number'
+          id='max-nights'
+          defaultValue={maxBookingLength}
+          disabled={isUpdating}
+          onBlur={(e) => handleUpdate(e.target.value, 'maxBookingLength')}
+        />
       </FormRow>
       <FormRow label='Maximum guests/booking'>
-        <Input type='number' id='max-guests' defaultValue={maxGuestsPerBooking} />
+        <Input
+          type='number'
+          id='max-guests'
+          defaultValue={maxGuestsPerBooking}
+          disabled={isUpdating}
+          onBlur={(e) => handleUpdate(e.target.value, 'maxGuestsPerBooking')}
+        />
       </FormRow>
       <FormRow label='Breakfast price'>
-        <Input type='number' id='breakfast-price' defaultValue={breakfastPrice} />
+        <Input
+          type='number'
+          id='breakfast-price'
+          defaultValue={breakfastPrice}
+          disabled={isUpdating}
+          onBlur={(e) => handleUpdate(e.target.value, 'breakfastPrice')}
+        />
       </FormRow>
     </Form>
   );
