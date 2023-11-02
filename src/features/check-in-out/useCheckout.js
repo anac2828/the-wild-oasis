@@ -13,6 +13,7 @@ function useCheckout() {
 
     //   data comes from the updateBooking function
     onSuccess: (data) => {
+      console.log(data);
       toast.success(`Booking #${data.id} successfully checked out`);
       // use queryClient so updated data will be re-fetched
       queryClient.invalidateQueries({ active: true });

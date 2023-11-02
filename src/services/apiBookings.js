@@ -2,6 +2,8 @@ import { getToday } from '../utils/helpers';
 import supabase from './supabase';
 import { PAGE_SIZE } from '../utils/constants';
 
+// *** GET ALL BOOKINGS *** //
+
 export async function getBookings({ filter, sortBy, page }) {
   let query = supabase
     .from('bookings')
@@ -35,6 +37,7 @@ export async function getBookings({ filter, sortBy, page }) {
   return { data, count };
 }
 
+// *** GET ONE BOOKING *** //
 export async function getBooking(id) {
   const { data, error } = await supabase
     .from('bookings')
@@ -104,6 +107,7 @@ export async function getStaysTodayActivity() {
   return data;
 }
 
+// *** UPDATE BOOKING *** //
 export async function updateBooking(id, obj) {
   const { data, error } = await supabase
     .from('bookings')
@@ -119,6 +123,7 @@ export async function updateBooking(id, obj) {
   return data;
 }
 
+// *** DELETE BOOKING *** //
 export async function deleteBooking(id) {
   // REMEMBER RLS POLICIES
   const { data, error } = await supabase.from('bookings').delete().eq('id', id);
