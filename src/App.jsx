@@ -15,6 +15,7 @@ import Login from './pages/Login';
 import PageNotFound from './pages/PageNotFound';
 import AppLayout from './ui/AppLayout';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import ProtectedRoute from './ui/ProtectedRoute';
 
 // staleTime is amount of the the data will be store in RQ cache.
 const queryClient = new QueryClient({
@@ -34,8 +35,13 @@ function App() {
       <GlobalSyles />
       <BrowserRouter>
         <Routes>
-          <Route element={<AppLayout />}>
-            {/* An index route is needed */}
+          <Route
+            element={
+              <ProtectedRoute>
+                <AppLayout />
+              </ProtectedRoute>
+            }>
+            {/* An index route is needed. AppLayout routes are children of the ProtectedRoute component also and will return route if use is authenticated*/}
             <Route index element={<Navigate replace to='dashboard' />} />
             <Route path='dashboard' element={<Dashboard />} />
             <Route path='bookings' element={<Bookings />} />
