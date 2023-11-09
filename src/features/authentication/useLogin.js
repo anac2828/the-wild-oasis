@@ -11,7 +11,7 @@ export function useLogin() {
     mutationFn: ({ email, password }) => loginApi({ email, password }),
     onSuccess: (user) => {
       // This will put the user info on the Query cache so that the user is the fetched from supa base everytime the user info is needed
-      queryClient.setQueriesData(['user'], user);
+      queryClient.setQueryData(['user'], user.user);
       navigate('/dashboard', { replace: true });
     },
     onError: (err) => {
