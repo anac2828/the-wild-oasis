@@ -54,7 +54,6 @@ function CheckinBooking() {
   function handleCheckin() {
     if (!confirmPaid) return;
     if (addBreakfast) {
-      console.log(bookingId);
       checkin({
         bookingId,
         breakfast: {
