@@ -15,6 +15,7 @@ const NavList = styled.ul`
   gap: 0.8rem;
 `;
 
+// NavLink is a react-router component that prevents a page reload when navigating to a differet page and it adds the active class to the clicked NavLink component
 const StyledNavLink = styled(NavLink)`
   &:link,
   &:visited {

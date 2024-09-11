@@ -14,8 +14,8 @@ import Account from './pages/Account';
 import Login from './pages/Login';
 import PageNotFound from './pages/PageNotFound';
 import AppLayout from './ui/AppLayout';
-import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import ProtectedRoute from './ui/ProtectedRoute';
+// import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+// import ProtectedRoute from './ui/ProtectedRoute';
 import { DarkModeProvider } from './context/DarkModeContext';
 
 // staleTime is amount of the the data will be store in RQ cache.
@@ -32,18 +32,14 @@ function App() {
       {/* // Data provider with React-query */}
       <QueryClientProvider client={queryClient}>
         {/* Browser dev tools */}
-        <ReactQueryDevtools initialIsOpen={false} />
+        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
         {/* CSS global styles */}
         <GlobalSyles />
         <BrowserRouter>
           <Routes>
-            <Route
-              element={
-                <ProtectedRoute>
-                  <AppLayout />
-                </ProtectedRoute>
-              }>
+            <Route element={<AppLayout />}>
               {/* An index route is needed. AppLayout routes are children of the ProtectedRoute component also and will return route if use is authenticated*/}
+              {/* Routes render inside the AppLayout */}
               <Route index element={<Navigate replace to='dashboard' />} />
               <Route path='dashboard' element={<Dashboard />} />
               <Route path='bookings' element={<Bookings />} />
@@ -54,7 +50,7 @@ function App() {
               <Route path='settings' element={<Settings />} />
               <Route path='account' element={<Account />} />
             </Route>
-
+            {/* Will not be rendered inside the AppLayout component */}
             <Route path='login' element={<Login />} />
             <Route path='*' element={<PageNotFound />} />
           </Routes>

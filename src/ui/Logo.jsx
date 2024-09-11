@@ -12,7 +12,7 @@ const Img = styled.img`
 
 function Logo() {
   const { isDarkMode } = useDarkMode();
-
+  // Logo image is in the public folder
   const logo = isDarkMode ? '/logo-dark.png' : '/logo-light.png';
   return (
     <StyledLogo>
