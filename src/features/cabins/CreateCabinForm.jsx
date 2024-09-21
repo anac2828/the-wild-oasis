@@ -10,24 +10,25 @@ import Button from '../../ui/Button';
 import FileInput from '../../ui/FileInput';
 import Textarea from '../../ui/Textarea';
 
-// close onCloseModal is the close function that comes from the Modal Context component
+// Close onCloseModal is the close function that comes from the Modal Context component
 function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
-  // received from CabinRow
-  const { id: editId, ...editValues } = cabinToEdit;
-  // True if there is an editId
-  const isEditSession = Boolean(editId);
   const { isCreating, createCabin } = useCreateCabin();
   const { isEditing, editCabin } = useEditCabin();
-  // to get access to form data when it is submitted
-  const { register, reset, handleSubmit, getValues, formState } = useForm({
-    // To prefill form fields when editing a cabin
-    defaultValues: isEditSession ? editValues : {},
-  });
-  const errors = formState.errors;
+  // Props received from CabinRow
+  const { id: editId, ...editValues } = cabinToEdit;
+  // Returns true if there is an editId
+  const isEditSession = Boolean(editId);
   const isWorking = isCreating || isEditing;
 
+  // Form data handling hook when form is submitted
+  const { register, reset, handleSubmit, getValues, formState } = useForm({
+    // To prefill form fields only when editing a cabin
+    defaultValues: isEditSession ? editValues : {},
+  });
+  const { errors } = formState;
+
   function onSubmit(data) {
-    // check if image has the supabase url or a FileList object
+    // Check if image has the Supabase URL or a FileList object. If the cabin is being edited, data.image will be a string else a file
     // Form fields need to match the fields in supabase. Replace data.image[0] with image: data.image[0]
     const image = typeof data.image === 'string' ? data.image : data.image[0];
 
@@ -35,9 +36,10 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
       editCabin(
         { newCabinData: { ...data, image }, id: editId },
         {
+          // onSuccess gets access to the data returned by the createCabin function. We call onSuccess here because the reset() function is a useForm function that could not be used on the useCreateCabin hook.
           onSuccess: () => {
             reset();
-            onCloseModal?.();
+            onCloseModal?.(); //Closes modal after it is edited
           },
         }
       );
@@ -45,17 +47,21 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
       createCabin(
         { ...data, image: image },
         {
+          // onSuccess gets access to the data returned by the createCabin function. We call onSuccess here because the reset() function is a useForm function that could not be used on the useCreateCabin hook.
           onSuccess: () => {
             reset();
-            onCloseModal?.();
+            onCloseModal?.(); //Closes modal after it is created
           },
         }
       );
   }
 
   return (
-    // Type prop is to style the form if it inside a modal. handleSubmit
-    <Form onSubmit={handleSubmit(onSubmit)} type={onCloseModal ? 'modal' : 'regular'}>
+    // Type prop is to style the form if it inside a modal.
+    <Form
+      onSubmit={handleSubmit(onSubmit)}
+      type={onCloseModal ? 'modal' : 'regular'}
+    >
       <FormRow label={'Cabin name'} error={errors?.name?.message}>
         <Input
           type='text'
@@ -110,7 +116,10 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
         />
       </FormRow>
 
-      <FormRow label='Description for website' error={errors?.description?.message}>
+      <FormRow
+        label='Description for website'
+        error={errors?.description?.message}
+      >
         <Textarea
           type='text'
           id='description'
@@ -122,24 +131,29 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
         />
       </FormRow>
 
+      {/* IMAGE UPLOAD */}
       <FormRow label='Cabin photo' error={errors?.image?.message}>
         <FileInput
           id='image'
           accept='image/*'
           {...register('image', {
-            // will not be required if cabin is being edited
+            // If isEditSession Will not be required if cabin is being edited
             required: isEditSession ? false : 'This field is required',
           })}
         />
       </FormRow>
 
+      {/* BUTTONS */}
       <FormRow>
-        {/* type is an HTML attribute! */}
-        <Button $variation='secondary' type='reset' onClick={() => onCloseModal?.()}>
+        <Button
+          $variation='secondary'
+          type='reset' // HTML attribute
+          onClick={() => onCloseModal?.()} // Will only work if the onCloseModal exists
+        >
           Cancel
         </Button>
         <Button disabled={isWorking}>
-          {isEditSession ? 'Edit cabin' : 'Create new cabin'}
+          {isEditSession ? 'Save cabin' : 'Create new cabin'}
         </Button>
       </FormRow>
     </Form>

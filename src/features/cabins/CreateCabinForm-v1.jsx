@@ -12,43 +12,65 @@ import FileInput from '../../ui/FileInput';
 import Textarea from '../../ui/Textarea';
 
 function CreateCabinForm() {
-  // to get acced to form data when it is submitted
+  //  Form data handling hook when form is submitted
   const { register, reset, handleSubmit, getValues, formState } = useForm();
-  const errors = formState.errors;
+  const { errors } = formState;
 
-  // for the table component to re-render when a new cabin is added with form
+  // Gives access to state
   const queryClient = useQueryClient();
 
-  // to connect createCabin to react-query
+  // Runs createCabin API funtion to create new cabin on Supabase
   const { mutate, isLoading: isCreating } = useMutation({
     mutationFn: createCabin,
     onSuccess: () => {
-      toast.success('New cabin successfully created');
+      toast.success('New cabin successfully created.');
       // Table will be re-render
       queryClient.invalidateQueries({ queryKey: ['cabins'] });
-      // clears form fields
+      // Clears form fields
       reset();
     },
-    // error meesage comes from createCabin
+    // Error meesage comes from createCabin
     onError: (err) => toast.error(err.message),
   });
 
+  // Data will be passed from the handleSubmit function
   function onSubmit(data) {
-    // fields need to match the fields in supabase. Replace data.image[0] with image: data.image.at(0)
+    // Fields need to match the fields in supabase.
     mutate({ ...data, image: data.image[0] });
   }
 
+  // eslint-disable-next-line no-unused-vars
+  function onError(errors) {
+    // For testing only
+    // console.log(errors);
+  }
+
   return (
-    <Form onSubmit={handleSubmit(onSubmit)}>
+    // If there is an invalid input the onError function will run
+    <Form onSubmit={handleSubmit(onSubmit, onError)}>
       <FormRow label={'Cabin name'} error={errors?.name?.message}>
         <Input
           type='text'
           id='name'
           disabled={isCreating}
-          // returns the value of the input when form is submitted
+          // Returns the value of the input when form is submitted
           {...register('name', {
-            // error message
-            required: 'This field is required',
+            // Error message
+            required: 'This field is required.',
+          })}
+        />
+      </FormRow>
+
+      <FormRow label={'Max Capacity'} error={errors?.maxCapacity?.message}>
+        <Input
+          type='number'
+          id='maxCapacity'
+          disabled={isCreating}
+          // Returns the value of the input when form is submitted
+          {...register('maxCapacity', {
+            // Error message
+            required: 'This field is required.',
+            min: { value: 1, message: 'Capacity should be at least 1.' },
           })}
         />
       </FormRow>
@@ -59,7 +81,8 @@ function CreateCabinForm() {
           id='regularPrice'
           disabled={isCreating}
           {...register('regularPrice', {
-            required: 'This field is required',
+            required: 'This field is required.',
+            min: { value: 1, message: 'Price should be at least 1.' },
           })}
         />
       </FormRow>
@@ -71,26 +94,29 @@ function CreateCabinForm() {
           defaultValue={0}
           disabled={isCreating}
           {...register('discount', {
-            required: 'This field is required',
-            // custom validate function
+            required: 'This field is required.',
+            // Custom validation function that gets the value from the field
             validate: (value) => {
               return (
                 Number(value) <= Number(getValues().regularPrice) ||
-                'Discount should be less than regular price'
+                'Discount should be less than regular price.'
               );
             },
           })}
         />
       </FormRow>
 
-      <FormRow label='Description for website' error={errors?.description?.message}>
+      <FormRow
+        label='Description for website'
+        error={errors?.description?.message}
+      >
         <Textarea
           type='text'
           id='description'
           disabled={isCreating}
           defaultValue=''
           {...register('description', {
-            required: 'This field is required',
+            required: 'This field is required.',
           })}
         />
       </FormRow>
@@ -99,7 +125,7 @@ function CreateCabinForm() {
         <FileInput
           id='image'
           accept='image/*'
-          {...register('image', { required: 'This field is required' })}
+          {...register('image', { required: 'This field is required.' })}
         />
       </FormRow>
 

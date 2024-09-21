@@ -30,8 +30,8 @@ const TableHeader = styled.header`
 `;
 
 function CabinTable() {
-  // fetches cabins from supabase using react-query
-  const { isLoading, error, cabins } = useCabins();
+  // Fetches cabins from supabase using react-query
+  const { isLoading, cabins } = useCabins();
 
   if (isLoading) return <Spinner />;
 

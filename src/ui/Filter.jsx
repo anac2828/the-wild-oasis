@@ -34,17 +34,18 @@ const FilterButton = styled.button`
     color: var(--color-brand-50);
   }
 `;
-
+// Filter component can be anywhere beacuase we are not using useState, but we are saving the state in the URL
 function Filter({ filterField, options }) {
+  // Saves data to URL
   const [searchParams, setSearchParams] = useSearchParams();
   // gets current filter value to set the active class
   const currentFilter = searchParams.get(filterField) || options.at(0).value;
 
   function handleClick(value) {
-    // saves the name and value to the searchParams state
+    // First you need to save the name and value to the searchParams state
     searchParams.set(filterField, value);
     if (searchParams.get('page')) searchParams.set('page', 1);
-    // puts it in the url
+    // Saves state on the url
     setSearchParams(searchParams);
   }
 
@@ -55,7 +56,8 @@ function Filter({ filterField, options }) {
           onClick={() => handleClick(option.value)}
           key={option.value}
           $active={option.value === currentFilter}
-          disabled={option.value === currentFilter}>
+          disabled={option.value === currentFilter} // disabled if currently selected
+        >
           {option.label}
         </FilterButton>
       ))}

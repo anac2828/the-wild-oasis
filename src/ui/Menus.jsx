@@ -65,42 +65,42 @@ const StyledButton = styled.button`
   }
 `;
 
-// Context
-
+//* CONTEXT
 const MenusContext = createContext();
 
-// Parent
+//* PARENT
 function Menus({ children }) {
-  const [openId, setOpenId] = useState('');
-  const [position, setPostion] = useState(null);
+  const [openId, setOpenId] = useState(''); // Keeps track of which window is open
+  const [position, setPostion] = useState(null); // Sets the postion of the Menu window
   const close = () => setOpenId('');
-  const open = setOpenId;
+  const open = setOpenId; //Open function sets the id of which window will be open
   return (
-    <MenusContext.Provider value={{ openId, close, open, position, setPostion }}>
+    <MenusContext.Provider
+      value={{ openId, close, open, position, setPostion }}
+    >
       {children}
     </MenusContext.Provider>
   );
 }
 
-// children
-// Toggle will set the opendId to the id of the cabin that it was clicked on
+//* CHILDREN
 function Toggle({ id }) {
+  // id = cabinId
   const { openId, close, open, setPostion } = useContext(MenusContext);
 
   function handleClick(e) {
-    // gets info of button clicked on to set the position on the window
+    // If openID is an empty string or it is not the same as the ID it will open the menus window otherwise it will close it
+    openId === '' || openId !== id ? open(id) : close();
+    // Gets info of button clicked on to set the position on the window
     const rect = e.target.closest('button').getBoundingClientRect();
 
-    // determines the position of the menus window
+    // Determines the position of the menus window
     setPostion({
       x: window.innerWidth - rect.width - rect.x,
       y: rect.y + rect.height + 8,
     });
-
-    // if openID is an empty string or it is not the same as the ID it will open the menus window otherwise it will close it
-    openId === '' || openId !== id ? open(id) : close();
   }
-
+  // Toggle button
   return (
     <StyledToggle onClick={handleClick}>
       <HiEllipsisVertical />
@@ -108,14 +108,16 @@ function Toggle({ id }) {
   );
 }
 
-// If openId matches the id of the cabin clicked on, the List component with the buttons will be displayed
 function List({ id, children }) {
+  // id = cabinId
   const { openId, position, close } = useContext(MenusContext);
 
+  // closes List window if clicked outside
   const ref = useCloseModal(close);
 
   if (openId !== id) return null;
 
+  // If openId matches the id of the cabin clicked on, the List component with the buttons will be displayed
   return createPortal(
     <StyledList $position={{ x: position.x, y: position.y }} ref={ref}>
       {children}
@@ -124,15 +126,17 @@ function List({ id, children }) {
   );
 }
 
-// onClick comes from the Cabin row
+// "onClick" comes from the CabinRow
 function Button({ children, icon, onClick }) {
   const { close } = useContext(MenusContext);
+
   function handleClick() {
     onClick?.();
-    close();
+    close(); // Closes menu window
   }
 
   return (
+    // "li" is used because it will be rendered inside the "List" component
     <li>
       <StyledButton onClick={handleClick}>
         {icon} <span>{children}</span>

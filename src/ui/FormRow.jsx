@@ -37,6 +37,7 @@ const Error = styled.span`
 `;
 
 function FormRow({ children, label, error }) {
+  //The input field is a child of the FormRow and children.props.id will be used to connect the label and the in put field
   return (
     <StyledFormRow>
       {label && <Label htmlFor={children.props.id}>{label}</Label>}

@@ -6,7 +6,8 @@ import Input from '../../ui/Input';
 import Spinner from '../../ui/Spinner';
 
 function UpdateSettingsForm() {
-  // At the beginning settigs will be undefined because they have not loaded yet. Set settings to empty object to prevent errors
+  // At the beginning settigs will be undefined because they have not loaded yet. Set settings to empty object to prevent errors.
+  const { isUpdating, updateSetting } = useUpdateSetting();
   const {
     isLoading,
     settings: {
@@ -17,12 +18,9 @@ function UpdateSettingsForm() {
     } = {},
   } = useSettings();
 
-  const { isUpdating, updateSetting } = useUpdateSetting();
-
   if (isLoading) return <Spinner />;
 
   function handleUpdate(value, field) {
-    console.log(value, field);
     if (!value) return;
     updateSetting({ [field]: value });
   }

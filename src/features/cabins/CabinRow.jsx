@@ -53,7 +53,6 @@ const Discount = styled.div`
 `;
 
 function CabinRow({ cabin }) {
-  const { isDeleting, deleteCabin } = useDeleteCabin();
   const {
     name,
     maxCapacity,
@@ -63,7 +62,8 @@ function CabinRow({ cabin }) {
     id: cabinId,
     description,
   } = cabin;
-  const { isCreating, createCabin } = useCreateCabin();
+  const { isDeleting, deleteCabin } = useDeleteCabin();
+  const { createCabin } = useCreateCabin();
 
   function handleDuplicate() {
     createCabin({
@@ -77,58 +77,56 @@ function CabinRow({ cabin }) {
   }
 
   return (
-    <>
-      <Table.Row>
-        <Img src={image} />
-        <Cabin>{name}</Cabin>
-        <div>Fits up to {maxCapacity} guests</div>
-        <Price>{formatCurrency(regularPrice)}</Price>
-        {discount ? (
-          <Discount>{formatCurrency(discount)}</Discount>
-        ) : (
-          <span>&mdash;</span>
-        )}
-        <div>
-          {/* open cabin form to edit */}
-          <Modal>
-            <Menus.Menu>
-              <Menus.Toggle id={cabinId} />
+    <Table.Row>
+      <Img src={image} />
+      <Cabin>{name}</Cabin>
+      <div>Fits up to {maxCapacity} guests</div>
+      <Price>{formatCurrency(regularPrice)}</Price>
+      {discount ? (
+        <Discount>{formatCurrency(discount)}</Discount>
+      ) : (
+        <span>&mdash;</span>
+      )}
+      <div>
+        {/* Open cabin form to edit */}
+        <Modal>
+          <Menus.Menu>
+            <Menus.Toggle id={cabinId} />
+            <Menus.List id={cabinId}>
+              {/* DUPLICATE CABIN - This does not open a modal window, so it does not need a Modal.Open*/}
+              <Menus.Button icon={<HiSquare2Stack />} onClick={handleDuplicate}>
+                Duplicate
+              </Menus.Button>
 
-              <Menus.List id={cabinId}>
-                {/* DUPLICATE CABIN - This does not open a modal window, so it does not need a Modal.Open*/}
-                <Menus.Button icon={<HiSquare2Stack />} onClick={handleDuplicate}>
-                  Duplicate
+              {/* EDIT CABIN OPENS MODAL WINDOW*/}
+              <Modal.Open opens='cabin-form'>
+                <Menus.Button icon={<HiPencil />} opens='cabin-form'>
+                  Edit
                 </Menus.Button>
+              </Modal.Open>
 
-                {/* EDIT CABIN */}
-                <Modal.Open opens='cabin-form'>
-                  <Menus.Button icon={<HiPencil />} opens='cabin-form'>
-                    Edit
-                  </Menus.Button>
-                </Modal.Open>
+              {/* DELETE CABIN OPENS MODAL WINDOW */}
+              <Modal.Open opens='delete'>
+                <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
+              </Modal.Open>
+            </Menus.List>
 
-                {/* DELETE CABIN BUTTON */}
-                <Modal.Open opens='delete'>
-                  <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
-                </Modal.Open>
-              </Menus.List>
-              {/* MODAL WIDOW - opens when edit or delete is clicked */}
-              <Modal.Window name='cabin-form'>
-                <CreateCabinForm cabinToEdit={cabin} />
-              </Modal.Window>
+            {/* MODAL WIDOW - opens when edit or delete is clicked */}
+            <Modal.Window name='cabin-form'>
+              <CreateCabinForm cabinToEdit={cabin} />
+            </Modal.Window>
 
-              <Modal.Window name='delete'>
-                <ConfirmDelete
-                  resourceName='cabins'
-                  disabled={isDeleting}
-                  onConfirm={() => deleteCabin(cabinId)}
-                />
-              </Modal.Window>
-            </Menus.Menu>
-          </Modal>
-        </div>
-      </Table.Row>
-    </>
+            <Modal.Window name='delete'>
+              <ConfirmDelete
+                resourceName='cabins'
+                disabled={isDeleting}
+                onConfirm={() => deleteCabin(cabinId)}
+              />
+            </Modal.Window>
+          </Menus.Menu>
+        </Modal>
+      </div>
+    </Table.Row>
   );
 }
 

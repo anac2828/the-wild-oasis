@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { getCabins } from '../../services/apiCabins';
 
 export function useCabins() {
-  // fetches cabins from supabase using react-query
+  // Fetches cabins from supabase using react-query
   const {
     isLoading,
     data: cabins,

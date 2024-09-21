@@ -29,13 +29,14 @@ const TableHeader = styled.header`
 `;
 
 function CabinTable() {
-  // fetches cabins from supabase using react-query
+  // Fetches cabins from supabase when component is loaded using react-query
   const {
     isLoading,
     data: cabins,
     error,
   } = useQuery({
     queryKey: ['cabins'],
+    // This is where you would use the fectch function
     queryFn: getCabins,
   });
 

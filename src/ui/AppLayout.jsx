@@ -30,7 +30,7 @@ function AppLayout() {
       <Sidebar />
       <Main>
         <Container>
-          {/* Outline enables the route components to be rendered insdie the AppLayout component */}
+          {/* Outlet enables the route components to be rendered insdie the AppLayout component */}
           <Outlet />
         </Container>
       </Main>

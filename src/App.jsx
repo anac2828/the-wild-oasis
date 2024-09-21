@@ -1,5 +1,5 @@
-import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter, Route, Routes, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 //
 import GlobalSyles from './styles/GlobalStyles';
@@ -14,15 +14,15 @@ import Account from './pages/Account';
 import Login from './pages/Login';
 import PageNotFound from './pages/PageNotFound';
 import AppLayout from './ui/AppLayout';
-// import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 // import ProtectedRoute from './ui/ProtectedRoute';
 import { DarkModeProvider } from './context/DarkModeContext';
 
 // staleTime is amount of the the data will be store in RQ cache.
 const queryClient = new QueryClient({
-  // data will always be fetched when it changes
+  // data always be state and will be fetched when it changes
   defaultOptions: { queries: { staleTime: 0 } },
-  // defaultOptions: { queries: { staleTime: 60 * 1000 } },
+  // defaultOptions: { staleTime: 60 * 1000 },
 });
 
 // DECLARATIVE WAY OF SETTING UP ROUTES - We don't need to use useLoaders like in the pizza app so we are using the route setup
@@ -31,8 +31,8 @@ function App() {
     <DarkModeProvider>
       {/* // Data provider with React-query */}
       <QueryClientProvider client={queryClient}>
-        {/* Browser dev tools */}
-        {/* <ReactQueryDevtools initialIsOpen={false} /> */}
+        {/* React Query browser dev tools */}
+        <ReactQueryDevtools initialIsOpen={false} />
         {/* CSS global styles */}
         <GlobalSyles />
         <BrowserRouter>
@@ -55,8 +55,10 @@ function App() {
             <Route path='*' element={<PageNotFound />} />
           </Routes>
         </BrowserRouter>
+        {/* Needed for toast.success() and toast.error() to work */}
         <Toaster
           position='top-center'
+          // Space between toaster and window
           gutter={12}
           containerStyle={{ margin: '8px' }}
           toastOptions={{

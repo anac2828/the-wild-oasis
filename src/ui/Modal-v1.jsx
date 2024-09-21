@@ -51,7 +51,7 @@ const Button = styled.button`
   }
 `;
 
-// react portal renders an element outside the parent but leaves it in the same postion in the dome tree
+// createPortal is a React DOM function that renders an element outside the parent but leaves it in the same postion in the DOM tree
 
 function Modal({ children, onClose }) {
   return createPortal(
@@ -63,7 +63,7 @@ function Modal({ children, onClose }) {
         <div>{children}</div>
       </StyledModal>
     </Overlay>,
-    // will be rendered in the html body element
+    // Modal will be rendered in the html body element
     document.body
   );
 }

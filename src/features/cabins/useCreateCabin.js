@@ -2,8 +2,9 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createEditCabin } from '../../services/apiCabins';
 import toast from 'react-hot-toast';
 
+// ** CALLS CREATE API FUNCTION
 export function useCreateCabin() {
-  // for the table component to re-render when a new cabin is added with the form
+  // Access to state
   const queryClient = useQueryClient();
 
   // to connect createEditCabin to react-query
