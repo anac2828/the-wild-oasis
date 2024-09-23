@@ -3,35 +3,35 @@ import supabase from './supabase';
 import { PAGE_SIZE } from '../utils/constants';
 
 // *** GET ALL BOOKINGS *** //
-
 export async function getBookings({ filter, sortBy, page }) {
-  let query = supabase
-    .from('bookings')
-    .select(
-      'id, created_at, startDate, endDate, numNights, numGuests, status, totalPrice, cabins(name), guests(fullName, email), isPaid',
-      { count: 'exact' }
-    );
+  // cabins(name) Selects the name from the cabins table and guests(fullName, email) selects the name and email from the guests table
+  let query = supabase.from('bookings').select(
+    'id, created_at, startDate, endDate, numNights, numGuests, status, totalPrice, cabins(name), guests(fullName, email), isPaid',
+    { count: 'exact' } // Get number of results without having to return all the results if they are not needed
+  );
 
-  // FILTER
+  //* FILTER - filter object comes from the useBookings hook. It contains the field and value. Filter.method will search for an amount in the totalPrice column.
   if (filter) query = query[filter.method || 'eq'](filter.field, filter.value);
 
-  // SORT
+  //* SORT
   if (sortBy)
-    query = query.order(sortBy.field, { ascending: sortBy.direction === 'asc' });
+    query = query.order(sortBy.field, {
+      ascending: sortBy.direction === 'asc',
+    });
 
-  // PAGINATION
+  //* PAGINATION - Returns results based on current page
   if (page) {
-    const from = (page - 1) * PAGE_SIZE;
-    const to = from + PAGE_SIZE - 1;
-    query = query.range(from, to);
+    const from = (page - 1) * PAGE_SIZE; // from page 1 - 1 * 10 = 0
+    const to = from + PAGE_SIZE - 1; // 0 + 10 - 1 = 9
+    query = query.range(from, to); // Will give 10 results
   }
 
-  // final data
+  //* FINAL DATA
   const { data, error, count } = await query;
 
   if (error) {
     console.error(error);
-    throw new Error('Booking not found');
+    throw new Error('Booking not found.');
   }
 
   return { data, count };

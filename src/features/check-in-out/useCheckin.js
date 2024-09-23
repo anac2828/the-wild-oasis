@@ -10,12 +10,16 @@ function useCheckin() {
   const { mutate: checkin, isLoading: isCheckingIn } = useMutation({
     // CAN ONLY RECEIVE ONE ARGUMENT
     mutationFn: ({ bookingId, breakfast }) =>
-      updateBooking(bookingId, { status: 'checked-in', isPaid: true, ...breakfast }),
+      updateBooking(bookingId, {
+        status: 'checked-in',
+        isPaid: true,
+        ...breakfast,
+      }),
 
-    //   data comes from the updateBooking function
+    //   Data comes from the updateBooking function
     onSuccess: (data) => {
       toast.success(`Booking #${data.id} successfully checked in`);
-      // use queryClient so updated data will be re-fetched
+      // Use queryClient so updated data will be re-fetched 'active: true' can be used instead of the the query key 'bookings'
       queryClient.invalidateQueries({ active: true });
       navigate('/');
     },

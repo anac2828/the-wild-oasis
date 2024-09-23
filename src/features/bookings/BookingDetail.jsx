@@ -42,6 +42,7 @@ function BookingDetail() {
 
   return (
     <>
+      {/* BOOKING ID AND BACK BUTTON */}
       <Row type='horizontal'>
         <HeadingGroup>
           <Heading as='h1'>Booking {bookingId}</Heading>
@@ -50,18 +51,23 @@ function BookingDetail() {
         <ButtonText onClick={moveBack}>&larr; Back</ButtonText>
       </Row>
 
+      {/* BOOKING DETAILS */}
       <BookingDataBox booking={booking} />
 
+      {/* BUTTONS TO CHECK IN AND OUT OR DELETE BOOKING */}
       <ButtonGroup>
         {status === 'unconfirmed' && (
-          <Button onClick={() => navigate(`/checkin/${bookingId}`)}>Check in</Button>
+          <Button onClick={() => navigate(`/checkin/${bookingId}`)}>
+            Check in
+          </Button>
         )}
 
         {status === 'checked-in' && (
           <Button
             $icon={<HiArrowUpOnSquare />}
             onClick={() => checkout(bookingId)}
-            disabled={isCheckingOut}>
+            disabled={isCheckingOut}
+          >
             Check out
           </Button>
         )}
@@ -78,6 +84,7 @@ function BookingDetail() {
               resourceName='bookings'
               disabled={isDeleting}
               onConfirm={() =>
+                // onSettled function will always run even if it returns an error.
                 deleteBooking(bookingId, { onSettled: () => navigate(-1) })
               }
             />

@@ -60,19 +60,25 @@ const PaginationButton = styled.button`
 `;
 
 function Pagination({ count }) {
-  const [searchParams, setSearchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams(); // Current page
+  const currentPage = !searchParams.get('page') // If there is no page value than currentPage will be 1.
+    ? 1
+    : Number(searchParams.get('page'));
+  // Number of pages
+  const pageCount = Math.ceil(count / PAGE_SIZE); // Count data comes from the Bookings API.
 
-  const currentPage = !searchParams.get('page') ? 1 : Number(searchParams.get('page'));
-  const pageCount = Math.ceil(count / PAGE_SIZE);
-
+  //* NEXT PAGE - SAVES PAGE NUMBER TO URL
   function nextPage() {
-    // check if on last page
+    // Check if on last page
     const next = currentPage === pageCount ? currentPage : currentPage + 1;
 
     searchParams.set('page', next);
     setSearchParams(searchParams);
   }
+
+  // * PREVIOUS PAGE - SAVES PAGE NUMBER TO URL
   function PreviousPage() {
+    // Check if on first page
     const previous = currentPage === 1 ? currentPage : currentPage - 1;
 
     searchParams.set('page', previous);
@@ -85,8 +91,11 @@ function Pagination({ count }) {
     <StyledPagination>
       <P>
         Showing <span>{(currentPage - 1) * PAGE_SIZE + 1}</span> to{' '}
-        <span>{currentPage === pageCount ? count : currentPage * PAGE_SIZE}</span> of{' '}
-        <span>{count}</span> results
+        <span>
+          {/* If on last page show count (total results) else currentPage * PAGE_SIZE */}
+          {currentPage === pageCount ? count : currentPage * PAGE_SIZE}
+        </span>{' '}
+        of <span>{count}</span> results
       </P>
 
       <Buttons>
@@ -94,7 +103,10 @@ function Pagination({ count }) {
           <HiChevronLeft />
           <span>Previous</span>
         </PaginationButton>
-        <PaginationButton onClick={nextPage} disabled={currentPage === pageCount}>
+        <PaginationButton
+          onClick={nextPage}
+          disabled={currentPage === pageCount}
+        >
           <span>Next</span>
           <HiChevronRight />
         </PaginationButton>

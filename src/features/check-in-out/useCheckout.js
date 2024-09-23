@@ -6,12 +6,12 @@ import toast from 'react-hot-toast';
 function useCheckout() {
   const queryClient = useQueryClient();
 
-  //mutate (checkin) is the mutationFn that will receive the bookinId
+  //Mutate (checkin) is the mutationFn that will receive the bookinId
   const { mutate: checkout, isLoading: isCheckingOut } = useMutation({
-    // CAN ONLY RECEIVE ONE ARGUMENT
-    mutationFn: (bookingId) => updateBooking(bookingId, { status: 'checked-out' }),
+    mutationFn: (bookingId) =>
+      updateBooking(bookingId, { status: 'checked-out' }),
 
-    //   data comes from the updateBooking function
+    //   Data comes from the updateBooking function
     onSuccess: (data) => {
       console.log(data);
       toast.success(`Booking #${data.id} successfully checked out`);

@@ -4,7 +4,7 @@ import supabase, { supabaseUrl } from './supabase';
 export async function getCabins() {
   // Fetches cabin data from supabase. "*" selects all fields in the table
   let { data: cabins, error } = await supabase.from('cabins').select('*');
-
+  console.log(cabins);
   if (error) {
     console.error(error);
     throw new Error('Cabins could not be loaded.');

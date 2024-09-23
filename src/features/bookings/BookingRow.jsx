@@ -1,5 +1,9 @@
 import styled from 'styled-components';
-import { HiArrowDownOnSquare, HiArrowUpOnSquare, HiTrash } from 'react-icons/hi2';
+import {
+  HiArrowDownOnSquare,
+  HiArrowUpOnSquare,
+  HiTrash,
+} from 'react-icons/hi2';
 import { format, isToday } from 'date-fns';
 import { useNavigate } from 'react-router-dom';
 
@@ -49,16 +53,14 @@ const Paid = styled.div`
 function BookingRow({
   booking: {
     id: bookingId,
-    created_at,
     startDate,
     endDate,
     numNights,
-    numGuests,
     totalPrice,
     status,
     isPaid,
-    guests: { fullName: guestName, email },
-    cabins: { name: cabinName },
+    guests: { fullName: guestName, email }, //Renames the guests data
+    cabins: { name: cabinName }, //Renames the cabins data
   },
 }) {
   const { isDeleting, deleteBooking } = useDeleteBooking();
@@ -68,20 +70,24 @@ function BookingRow({
     unconfirmed: 'blue',
     'checked-in': 'green',
     'checked-out': 'silver',
-  };
+  }; //Used to update the color of the Tag component
 
   return (
     <Table.Row>
       <Cabin>{cabinName}</Cabin>
 
+      {/* Guest info */}
       <Stacked>
         <span>{guestName}</span>
         <span>{email}</span>
       </Stacked>
 
+      {/* Booking Date */}
       <Stacked>
         <span>
-          {isToday(new Date(startDate)) ? 'Today' : formatDistanceFromNow(startDate)}{' '}
+          {isToday(new Date(startDate))
+            ? 'Today'
+            : formatDistanceFromNow(startDate)}{' '}
           &rarr; {numNights} night stay
         </span>
         <span>
@@ -90,11 +96,17 @@ function BookingRow({
         </span>
       </Stacked>
 
+      {/* Booking status */}
       <Tag type={statusToTagName[status]}>{status.replace('-', ' ')}</Tag>
 
+      {/* Booking paid status */}
       <Paid $paid={isPaid}>{isPaid ? 'Paid' : 'Not Paid'}</Paid>
 
+      {/* Booking amount */}
       <Amount>{formatCurrency(totalPrice)}</Amount>
+
+      {/* BUTTONS TO CHECK IN AND OUT OR DELETE BOOKING */}
+      {/* The Modal component is need because the delete button will open a window */}
       <Modal>
         <Menus.Menu>
           <Menus.Toggle id={bookingId} />
@@ -102,7 +114,8 @@ function BookingRow({
             {/* SEE DETAILS */}
             <Menus.Button
               icon={<HiArrowDownOnSquare />}
-              onClick={() => navigate(`/bookings/${bookingId}`)}>
+              onClick={() => navigate(`/bookings/${bookingId}`)}
+            >
               See details
             </Menus.Button>
 
@@ -110,7 +123,8 @@ function BookingRow({
             {status === 'unconfirmed' && (
               <Menus.Button
                 icon={<HiArrowDownOnSquare />}
-                onClick={() => navigate(`/checkin/${bookingId}`)}>
+                onClick={() => navigate(`/checkin/${bookingId}`)}
+              >
                 Check in
               </Menus.Button>
             )}
@@ -120,7 +134,8 @@ function BookingRow({
               <Menus.Button
                 icon={<HiArrowUpOnSquare />}
                 onClick={() => checkout(bookingId)}
-                disabled={isCheckingOut}>
+                disabled={isCheckingOut}
+              >
                 Check out
               </Menus.Button>
             )}
@@ -131,7 +146,8 @@ function BookingRow({
             </Modal.Open>
           </Menus.List>
         </Menus.Menu>
-        {/* CONFIRM DELETE */}
+
+        {/* CONFIRM DELETE MODAL WINDOW*/}
         <Modal.Window name='delete'>
           <ConfirmDelete
             resourceName='bookings'

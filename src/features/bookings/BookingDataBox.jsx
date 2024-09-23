@@ -101,7 +101,7 @@ const Footer = styled.footer`
   text-align: right;
 `;
 
-// A purely presentational component
+// Presentational component
 function BookingDataBox({ booking }) {
   const {
     created_at,
@@ -131,8 +131,10 @@ function BookingDataBox({ booking }) {
 
         <p>
           {format(new Date(startDate), 'EEE, MMM dd yyyy')} (
-          {isToday(new Date(startDate)) ? 'Today' : formatDistanceFromNow(startDate)})
-          &mdash; {format(new Date(endDate), 'EEE, MMM dd yyyy')}
+          {isToday(new Date(startDate))
+            ? 'Today'
+            : formatDistanceFromNow(startDate)}
+          ) &mdash; {format(new Date(endDate), 'EEE, MMM dd yyyy')}
         </p>
       </Header>
 
@@ -149,7 +151,10 @@ function BookingDataBox({ booking }) {
         </Guest>
 
         {observations && (
-          <DataItem icon={<HiOutlineChatBubbleBottomCenterText />} label='Observations'>
+          <DataItem
+            icon={<HiOutlineChatBubbleBottomCenterText />}
+            label='Observations'
+          >
             {observations}
           </DataItem>
         )}
