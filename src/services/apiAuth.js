@@ -1,6 +1,7 @@
 import supabase from './supabase';
 import { supabaseUrl } from './supabase';
 
+// * SIGN UP
 export async function signup({ fullName, email, password }) {
   const { data, error } = await supabase.auth.signUp({
     email,
@@ -13,21 +14,26 @@ export async function signup({ fullName, email, password }) {
   return data;
 }
 
+// * LOGIN
 export async function login({ email, password }) {
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
 
   if (error) throw new Error(error.message);
 
   return data;
 }
 
+// * GET CURRENT USER
 export async function getCurrentUser() {
-  // will get session from local storage
+  // * 1 Will get session from local storage
   const { data: session } = await supabase.auth.getSession();
 
   if (!session.session) return null;
 
-  // If there is a session it will fetch the user from supabase
+  //* 2 If there is a session it will fetch the user from supabase
   const { data, error } = await supabase.auth.getUser();
 
   if (error) throw new Error(error.message);
@@ -35,11 +41,13 @@ export async function getCurrentUser() {
   return data?.user;
 }
 
+// * LOGOUT
 export async function logout() {
   const { error } = await supabase.auth.signOut();
   if (error) throw new Error(error.message);
 }
 
+// * UPDATE CURRENT USER
 export async function updateCurrentUser({ password, fullName, avatar }) {
   // 1. Update password or fullname
   let updateData;
@@ -61,7 +69,9 @@ export async function updateCurrentUser({ password, fullName, avatar }) {
 
   // 3. Update avatar with avatar uploaded
   const { data: updateUser, error: error2 } = await supabase.auth.updateUser({
-    data: { avatar: `${supabaseUrl}/storage/v1/object/public/avatars/${fileName}` },
+    data: {
+      avatar: `${supabaseUrl}/storage/v1/object/public/avatars/${fileName}`,
+    },
   });
 
   if (error2) throw new Error(error2.message);

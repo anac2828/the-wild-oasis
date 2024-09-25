@@ -8,15 +8,17 @@ import SpinnerMini from '../../ui/SpinnerMini';
 
 function LoginForm() {
   const [email, setEmail] = useState('anac2828@gmail.com');
-  const [password, setPassword] = useState('1234test');
+  const [password, setPassword] = useState('test1234');
   const { login, isLoading } = useLogin();
 
   function handleSubmit(e) {
     e.preventDefault();
-    // second arg will clear the inputs
+    if (!email || !password) return;
+
     login(
       { email, password },
       {
+        // Clears input fields after submition
         onSettled: () => {
           setEmail('');
           setPassword('');

@@ -9,9 +9,9 @@ export function useLogout() {
   const { mutate: logout, isLoading } = useMutation({
     mutationFn: logoutApi,
     onSuccess: () => {
-      // removes all queries from cache
+      // Removes all queries from cache
       queryClient.removeQueries();
-      navigate('/login', { replace: true });
+      navigate('/login', { replace: true }); // replace: true - removes the place the user was before
     },
   });
 

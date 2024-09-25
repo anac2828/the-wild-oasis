@@ -17,6 +17,7 @@ import AppLayout from './ui/AppLayout';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 // import ProtectedRoute from './ui/ProtectedRoute';
 import { DarkModeProvider } from './context/DarkModeContext';
+import ProtectedRoute from './ui/ProtectedRoute';
 
 // staleTime is amount of the the data will be store in RQ cache.
 const queryClient = new QueryClient({
@@ -37,7 +38,13 @@ function App() {
         <GlobalSyles />
         <BrowserRouter>
           <Routes>
-            <Route element={<AppLayout />}>
+            <Route
+              element={
+                <ProtectedRoute>
+                  <AppLayout />
+                </ProtectedRoute>
+              }
+            >
               {/* An index route is needed. AppLayout routes are children of the ProtectedRoute component also and will return route if use is authenticated*/}
               {/* Routes render inside the AppLayout */}
               <Route index element={<Navigate replace to='dashboard' />} />

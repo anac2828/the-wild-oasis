@@ -13,18 +13,18 @@ const FullPage = styled.div`
 `;
 
 function ProtectedRoute({ children }) {
-  // navigate can only be used inside another function or hook
+  // Navigate can only be used inside another function or hook. We use the useEffect function to be able to use the navigate
   const navigate = useNavigate();
 
-  // 1. Load the authenticated user
+  //* 1. Load the authenticated user
   const { isAuthenticated, isLoading } = useUser();
 
-  // 2. If ther is NO authenticated user, redirect to the /login
+  //* 2. If ther is NO authenticated user, redirect to the /login
   useEffect(() => {
     if (!isAuthenticated && !isLoading) navigate('/login');
   }, [isAuthenticated, isLoading, navigate]);
 
-  // 3. While loading, show a spinner
+  //* 3. While loading, show a spinner
   if (isLoading)
     return (
       <FullPage>
@@ -32,7 +32,7 @@ function ProtectedRoute({ children }) {
       </FullPage>
     );
 
-  // 4. If there IS a user, render the app
+  //* 4. If there IS a user, render the app (children)
   if (isAuthenticated) return children;
 }
 export default ProtectedRoute;
