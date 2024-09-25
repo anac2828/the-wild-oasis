@@ -13,7 +13,7 @@ function SignupForm() {
   const { errors } = formState;
 
   function onSubmit({ fullName, email, password }) {
-    // onSettled: reset clears the field
+    // onSettled: reset() - clears the field
     signup({ fullName, email, password }, { onSettled: () => reset() });
   }
 
@@ -43,14 +43,20 @@ function SignupForm() {
         />
       </FormRow>
 
-      <FormRow label='Password (min 8 characters)' error={errors?.password?.message}>
+      <FormRow
+        label='Password (min 8 characters)'
+        error={errors?.password?.message}
+      >
         <Input
           type='password'
           id='password'
           disabled={isLoading}
           {...register('password', {
             required: 'This field is required',
-            minLength: { value: 8, message: 'Password needs a minimum of 8 characters' },
+            minLength: {
+              value: 8,
+              message: 'Password needs a minimum of 8 characters',
+            },
           })}
         />
       </FormRow>
