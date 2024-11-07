@@ -140,7 +140,7 @@ function BookingRow({
               </Menus.Button>
             )}
 
-            {/* DELETE */}
+            {/* DELETE Will open Modal window below*/}
             <Modal.Open opens='delete'>
               <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
             </Modal.Open>

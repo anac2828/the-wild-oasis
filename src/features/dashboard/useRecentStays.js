@@ -6,9 +6,11 @@ import { getStaysAfterDate } from '../../services/apiBookings';
 export function useRecentStays() {
   const [searchParams] = useSearchParams();
 
-  const numDays = !searchParams.get('last') ? 7 : Number(searchParams.get('last'));
+  const numDays = !searchParams.get('last')
+    ? 7
+    : Number(searchParams.get('last'));
 
-  //will convert the number of days selected into an ISO date
+  //will subtract the dates and into an ISO date
   const queryDate = subDays(new Date(), numDays).toISOString();
 
   const { isLoading, data: stays } = useQuery({

@@ -76,7 +76,7 @@ function Pagination({ count }) {
     setSearchParams(searchParams);
   }
 
-  // * PREVIOUS PAGE - SAVES PAGE NUMBER TO URL
+  // * PREVIOUS PAGE - SAVES PAGE NUMBER TO URL - Component rendered in the bookings table component
   function PreviousPage() {
     // Check if on first page
     const previous = currentPage === 1 ? currentPage : currentPage - 1;

@@ -6,12 +6,15 @@ import { useEffect } from 'react';
 const DarkModeContext = createContext();
 
 function DarkModeProvider({ children }) {
+  // @params, initial state and "key" value
   const [isDarkMode, setIsDarkMode] = useLocalStorageState(false, 'isDarkMode');
 
   function toggleDarkMode() {
+    // Sets isDark to the opposite of what is currently
     setIsDarkMode((isDark) => !isDark);
   }
 
+  // Will run when isDarkMode changes
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add('dark-mode');
