@@ -25,3 +25,6 @@ dist-ssr
 
 # Extra files
 src/ui/Modal-v1.jsx
+
+# Local Netlify folder
+.netlify
