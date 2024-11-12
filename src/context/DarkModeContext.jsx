@@ -7,7 +7,10 @@ const DarkModeContext = createContext();
 
 function DarkModeProvider({ children }) {
   // @params, initial state and "key" value
-  const [isDarkMode, setIsDarkMode] = useLocalStorageState(false, 'isDarkMode');
+  const [isDarkMode, setIsDarkMode] = useLocalStorageState(
+    window.matchMedia('(prefers-color-scheme: dark)').matches,
+    'isDarkMode'
+  ); // will set the dark mode to user match users preferance
 
   function toggleDarkMode() {
     // Sets isDark to the opposite of what is currently

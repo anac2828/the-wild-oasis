@@ -17,6 +17,7 @@ import ButtonText from '../../ui/ButtonText';
 import Spinner from '../../ui/Spinner';
 import Modal from '../../ui/Modal';
 import ConfirmDelete from '../../ui/ConfirmDelete';
+import Empty from '../../ui/Empty';
 
 const HeadingGroup = styled.div`
   display: flex;
@@ -29,10 +30,12 @@ function BookingDetail() {
   const moveBack = useMoveBack();
   const { isDeleting, deleteBooking } = useDeleteBooking();
   const { checkout, isCheckingOut } = useCheckout();
-  const { booking = {}, isLoading } = useBooking();
+  const { booking = {}, isLoading, error } = useBooking();
   const { status, id: bookingId } = booking;
 
   if (isLoading) return <Spinner />;
+  // if (!booking) return <Empty resourceName='booking' />; // THIS WILL RENDER THE ErrorFallback component
+  if (error) return <Empty resourceName='booking' />;
 
   const statusToTagName = {
     unconfirmed: 'blue',

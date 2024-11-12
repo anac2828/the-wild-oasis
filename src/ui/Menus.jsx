@@ -89,6 +89,8 @@ function Toggle({ id }) {
   const { openId, close, open, setPostion } = useContext(MenusContext);
 
   function handleClick(e) {
+    // This will fix the bug where the 3 dot menu would not close
+    e.stopPropagation();
     // If openID is an empty string or it is not the same as the ID it will open the menus window otherwise it will close it
     openId === '' || openId !== id ? open(id) : close();
     // Gets info of button clicked on to set the position on the window
@@ -112,8 +114,8 @@ function List({ id, children }) {
   // id = cabinId
   const { openId, position, close } = useContext(MenusContext);
 
-  // closes List window if clicked outside
-  const ref = useCloseModal(close);
+  // closes List window if clicked outside. Pass in false for the menu to close when the 3 dots are clicked.
+  const ref = useCloseModal(close, false);
 
   if (openId !== id) return null;
 
