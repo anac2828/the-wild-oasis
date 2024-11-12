@@ -63,7 +63,7 @@ function CabinRow({ cabin }) {
     description,
   } = cabin;
   const { isDeleting, deleteCabin } = useDeleteCabin();
-  const { createCabin } = useCreateCabin();
+  const { isCreating, createCabin } = useCreateCabin();
 
   function handleDuplicate() {
     createCabin({
@@ -94,7 +94,11 @@ function CabinRow({ cabin }) {
             <Menus.Toggle id={cabinId} />
             <Menus.List id={cabinId}>
               {/* DUPLICATE CABIN - This does not open a modal window, so it does not need a Modal.Open*/}
-              <Menus.Button icon={<HiSquare2Stack />} onClick={handleDuplicate}>
+              <Menus.Button
+                icon={<HiSquare2Stack />}
+                onClick={handleDuplicate}
+                disabled={isCreating}
+              >
                 Duplicate
               </Menus.Button>
 
