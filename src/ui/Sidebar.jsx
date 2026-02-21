@@ -1,6 +1,6 @@
-import styled from 'styled-components';
-import Logo from './Logo';
-import MainNav from './MainNav';
+import styled from 'styled-components'
+import Logo from './Logo'
+import MainNav from './MainNav'
 // import Uploader from '../data/Uploader';
 
 const StyledSidebar = styled.aside`
@@ -12,7 +12,7 @@ const StyledSidebar = styled.aside`
   border-right: 1px solid var(--color-grey-100);
   /* Will span the side bar from top to bottom on the left side of the page */
   grid-row: 1 / -1;
-`;
+`
 
 function Sidebar() {
   return (
@@ -22,7 +22,7 @@ function Sidebar() {
 
       {/* <Uploader /> */}
     </StyledSidebar>
-  );
+  )
 }
 
-export default Sidebar;
+export default Sidebar

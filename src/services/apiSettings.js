@@ -1,14 +1,16 @@
-import supabase from './supabase';
+import supabase from './supabase'
 
 // * GET SETTINGS
 export async function getSettings() {
-  const { data, error } = await supabase.from('settings').select('*').single();
+  const { data, error } = await supabase.from('settings').select('*').single()
+
+  console.log(data)
 
   if (error) {
-    console.error(error);
-    throw new Error('Settings could not be loaded');
+    console.error(error)
+    throw new Error('Settings could not be loaded')
   }
-  return data;
+  return data
 }
 
 // * UPDATE SETTINGS
@@ -19,11 +21,11 @@ export async function updateSetting(newSetting) {
     .update(newSetting) // The column in the table that will be updated
     // There is only ONE row of settings, and it has the ID=1, and so this is the updated one
     .eq('id', 1)
-    .single();
+    .single()
 
   if (error) {
-    console.error(error);
-    throw new Error('Settings could not be updated');
+    console.error(error)
+    throw new Error('Settings could not be updated')
   }
-  return data;
+  return data
 }

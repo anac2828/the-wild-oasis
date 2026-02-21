@@ -1,7 +1,8 @@
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from 'styled-components'
 
-const GlobalStyles = createGlobalStyle`:root {
-  
+// function to add global styles with 'styled-components' package
+const GlobalStyles = createGlobalStyle`
+:root {  
 
   &, &.light-mode{
   /* Grey */
@@ -182,6 +183,6 @@ img {
 
   /* For dark mode */
   filter: grayscale(var(--image-grayscale)) opacity(var(--image-opacity));
-}`;
+}`
 
-export default GlobalStyles;
+export default GlobalStyles

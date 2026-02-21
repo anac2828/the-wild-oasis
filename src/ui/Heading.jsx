@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 
-import styled, { css } from 'styled-components';
+import styled, { css } from 'styled-components'
 
 // css gives you synthax highlighting and for using interpolation
 // const test = css`
@@ -8,6 +8,7 @@ import styled, { css } from 'styled-components';
 //   ${10 > 5 && 'background-color: yellow'}
 // `;
 
+// props.type will not change the rendered html element, props.as will rendered the corresponding compoented passed to props.as
 const Heading = styled.h1`
   ${(props) =>
     props.type === 'h1' &&
@@ -36,8 +37,8 @@ const Heading = styled.h1`
       text-align: center;
     `}
 
-
+/* common to all types above */
   line-height: 1.4
-`;
+`
 
-export default Heading;
+export default Heading

@@ -1,23 +1,22 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { createEditCabin } from '../../services/apiCabins';
-import toast from 'react-hot-toast';
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { createEditCabin } from '../../services/apiCabins'
+import toast from 'react-hot-toast'
 
-// ** CALLS CREATE API FUNCTION
+// ** USED IN THE CreateCabinForm.jsx
 export function useCreateCabin() {
   // Access to state
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
-  // to connect createEditCabin to react-query
   const { mutate: createCabin, isLoading: isCreating } = useMutation({
-    mutationFn: createEditCabin,
+    mutationFn: createEditCabin, //Called by createCabin function
     onSuccess: () => {
-      toast.success('New cabin successfully created');
-      // Table will be re-render
-      queryClient.invalidateQueries({ queryKey: ['cabins'] });
+      toast.success('New cabin successfully created')
+      // Table will be re-render when the data is refetched
+      queryClient.invalidateQueries({ queryKey: ['cabins'] })
     },
-    // error meesage comes from createCabin
+    // error meesage comes from createEditCabin API function
     onError: (err) => toast.error(err.message),
-  });
+  })
 
-  return { createCabin, isCreating };
+  return { createCabin, isCreating }
 }

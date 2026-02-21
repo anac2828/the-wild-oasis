@@ -1,36 +1,39 @@
-import { useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form'
 //
-import { useCreateCabin } from './useCreateCabin';
-import { useEditCabin } from './useEditCabin';
+import { useCreateCabin } from './useCreateCabin'
+import { useEditCabin } from './useEditCabin'
 //
-import FormRow from '../../ui/FormRow';
-import Input from '../../ui/Input';
-import Form from '../../ui/Form';
-import Button from '../../ui/Button';
-import FileInput from '../../ui/FileInput';
-import Textarea from '../../ui/Textarea';
+import FormRow from '../../ui/FormRow'
+import Input from '../../ui/Input'
+import Form from '../../ui/Form'
+import Button from '../../ui/Button'
+import FileInput from '../../ui/FileInput'
+import Textarea from '../../ui/Textarea'
 
+// ** COMPONENT
 // Close onCloseModal is the close function that comes from the Modal Context component
 function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
-  const { isCreating, createCabin } = useCreateCabin();
-  const { isEditing, editCabin } = useEditCabin();
-  // Props received from CabinRow
-  const { id: editId, ...editValues } = cabinToEdit;
-  // Returns true if there is an editId
-  const isEditSession = Boolean(editId);
-  const isWorking = isCreating || isEditing;
-
-  // Form data handling hook when form is submitted
+  // * useFORM HOOKD
+  // register() links the input fields to the useForm hook, reset() will clear the form fields, getValue() returns the value if a field
   const { register, reset, handleSubmit, getValues, formState } = useForm({
     // To prefill form fields only when editing a cabin
     defaultValues: isEditSession ? editValues : {},
-  });
-  const { errors } = formState;
+  })
+  const { errors } = formState
 
+  // * API FUNCTIONS
+  const { isCreating, createCabin } = useCreateCabin()
+  const { isEditing, editCabin } = useEditCabin()
+  // Props received from CabinRow
+  const { id: editId, ...editValues } = cabinToEdit
+  // Returns true if there is an editId
+  const isEditSession = Boolean(editId)
+  const isInProgress = isCreating || isEditing
+
+  // * EVENT HANDELER
   function onSubmit(data) {
-    // Check if image has the Supabase URL or a FileList object. If the cabin is being edited, data.image will be a string else a file
-    // Form fields need to match the fields in supabase. Replace data.image[0] with image: data.image[0]
-    const image = typeof data.image === 'string' ? data.image : data.image[0];
+    // data = data from Form fields
+    const image = typeof data.image === 'string' ? data.image : data.image[0]
 
     if (isEditSession)
       editCabin(
@@ -38,35 +41,40 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
         {
           // onSuccess gets access to the data returned by the createCabin function. We call onSuccess here because the reset() function is a useForm function that could not be used on the useCreateCabin hook.
           onSuccess: () => {
-            reset();
-            onCloseModal?.(); //Closes modal after it is edited
+            reset()
+            onCloseModal?.() //Closes modal after it is edited
           },
-        }
-      );
+        },
+      )
     else
       createCabin(
-        { ...data, image: image },
+        { ...data, image },
         {
           // onSuccess gets access to the data returned by the createCabin function. We call onSuccess here because the reset() function is a useForm function that could not be used on the useCreateCabin hook.
           onSuccess: () => {
-            reset();
-            onCloseModal?.(); //Closes modal after it is created
+            reset()
+            onCloseModal?.() //Closes modal after it is created
           },
-        }
-      );
+        },
+      )
   }
 
+  //! Might have to add an error function to onSubmit below
+
   return (
+    // FormRow displays the label, error message, and takes the input component as a child
+    // Input is just a styled input component
     // Type prop is to style the form if it inside a modal.
     <Form
       onSubmit={handleSubmit(onSubmit)}
       type={onCloseModal ? 'modal' : 'regular'}
     >
+      {/* NAME  */}
       <FormRow label={'Cabin name'} error={errors?.name?.message}>
         <Input
           type='text'
           id='name'
-          disabled={isWorking}
+          disabled={isInProgress}
           // returns the value of the input when form is submitted
           {...register('name', {
             // error message
@@ -75,47 +83,47 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
         />
       </FormRow>
 
+      {/* NUMBER OF PEOPLE PER CABIN */}
       <FormRow label='Max Capacity' error={errors?.maxCapacity?.message}>
         <Input
           type='number'
           id='maxCapacity'
-          disabled={isWorking}
+          disabled={isInProgress}
           {...register('maxCapacity', {
             required: 'This field is required',
           })}
         />
       </FormRow>
 
+      {/* CABIN PRICE */}
       <FormRow label='Regular price' error={errors?.regularPrice?.message}>
         <Input
           type='number'
           id='regularPrice'
-          disabled={isWorking}
+          disabled={isInProgress}
           {...register('regularPrice', {
             required: 'This field is required',
           })}
         />
       </FormRow>
 
+      {/* DISCOUNT */}
       <FormRow label='Discount' error={errors?.discount?.message}>
         <Input
           type='number'
           id='discount'
           defaultValue={0}
-          disabled={isWorking}
+          disabled={isInProgress}
           {...register('discount', {
             required: 'This field is required',
             // custom validate function
-            validate: (value) => {
-              return (
-                Number(value) <= Number(getValues().regularPrice) ||
-                'Discount should be less than regular price'
-              );
-            },
+            validate: (value) =>
+              Number(value) <= Number(getValues().regularPrice) ||
+              'Discount should be less than regular price',
           })}
         />
       </FormRow>
-
+      {/* CABIN DESCRIPTION TEXT AREAD */}
       <FormRow
         label='Description for website'
         error={errors?.description?.message}
@@ -123,7 +131,7 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
         <Textarea
           type='text'
           id='description'
-          disabled={isWorking}
+          disabled={isInProgress}
           defaultValue=''
           {...register('description', {
             required: 'This field is required',
@@ -152,12 +160,12 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
         >
           Cancel
         </Button>
-        <Button disabled={isWorking}>
+        <Button disabled={isInProgress}>
           {isEditSession ? 'Save cabin' : 'Create new cabin'}
         </Button>
       </FormRow>
     </Form>
-  );
+  )
 }
 
-export default CreateCabinForm;
+export default CreateCabinForm

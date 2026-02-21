@@ -1,17 +1,17 @@
-import styled from 'styled-components';
-import { HiPencil, HiSquare2Stack, HiTrash } from 'react-icons/hi2';
+import styled from 'styled-components'
+import { HiPencil, HiSquare2Stack, HiTrash } from 'react-icons/hi2'
 
 //
-import { useDeleteCabin } from './useDeleteCabin';
-import { useCreateCabin } from './useCreateCabin';
+import { useDeleteCabin } from './useDeleteCabin'
+import { useCreateCabin } from './useCreateCabin'
 //
-import { formatCurrency } from '../../utils/helpers';
+import { formatCurrency } from '../../utils/helpers'
 //
-import Modal from '../../ui/Modal';
-import CreateCabinForm from './CreateCabinForm';
-import ConfirmDelete from '../../ui/ConfirmDelete';
-import Table from '../../ui/Table';
-import Menus from '../../ui/Menus';
+import Modal from '../../ui/Modal'
+import CreateCabinForm from './CreateCabinForm'
+import ConfirmDelete from '../../ui/ConfirmDelete'
+import Table from '../../ui/Table'
+import Menus from '../../ui/Menus'
 
 // const TableRow = styled.div`
 //   display: grid;
@@ -32,27 +32,29 @@ const Img = styled.img`
   object-fit: cover;
   object-position: center;
   transform: scale(1.5) translateX(-7px);
-`;
+`
 
 const Cabin = styled.div`
   font-size: 1.6rem;
   font-weight: 600;
   color: var(--color-grey-600);
   font-family: 'Sono';
-`;
+`
 
 const Price = styled.div`
   font-family: 'Sono';
   font-weight: 600;
-`;
+`
 
 const Discount = styled.div`
   font-family: 'Sono';
   font-weight: 500;
   color: var(--color-green-700);
-`;
+`
 
+// ** COMPONENT
 function CabinRow({ cabin }) {
+  // Cabin data passed by the Table Component
   const {
     name,
     maxCapacity,
@@ -61,9 +63,9 @@ function CabinRow({ cabin }) {
     image,
     id: cabinId,
     description,
-  } = cabin;
-  const { isDeleting, deleteCabin } = useDeleteCabin();
-  const { isCreating, createCabin } = useCreateCabin();
+  } = cabin
+  const { isDeleting, deleteCabin } = useDeleteCabin()
+  const { isCreating, createCabin } = useCreateCabin()
 
   function handleDuplicate() {
     createCabin({
@@ -73,7 +75,7 @@ function CabinRow({ cabin }) {
       discount,
       image,
       description,
-    });
+    })
   }
 
   return (
@@ -131,7 +133,7 @@ function CabinRow({ cabin }) {
         </Modal>
       </div>
     </Table.Row>
-  );
+  )
 }
 
-export default CabinRow;
+export default CabinRow

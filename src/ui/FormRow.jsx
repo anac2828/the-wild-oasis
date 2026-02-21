@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 const StyledFormRow = styled.div`
   display: grid;
@@ -25,16 +25,16 @@ const StyledFormRow = styled.div`
     justify-content: flex-end;
     gap: 1.2rem;
   }
-`;
+`
 
 const Label = styled.label`
   font-weight: 500;
-`;
+`
 
 const Error = styled.span`
   font-size: 1.4rem;
   color: var(--color-red-700);
-`;
+`
 
 function FormRow({ children, label, error }) {
   //The input field is a child of the FormRow and children.props.id will be used to connect the label and the in put field
@@ -44,7 +44,7 @@ function FormRow({ children, label, error }) {
       {children}
       {error && <Error>{error}</Error>}
     </StyledFormRow>
-  );
+  )
 }
 
-export default FormRow;
+export default FormRow
