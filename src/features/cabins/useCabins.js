@@ -10,7 +10,7 @@ export function useCabins() {
   } = useQuery({
     // Data will be saved in the cache with queryKey name 'cabins' to have access to the data without fechting it from the API again.
     queryKey: ['cabins'],
-    queryFn: getCabins, //Fuction that fetches data from supabase
+    queryFn: getCabins, //API Fuction that fetches data from supabase
   })
 
   return { isLoading, cabins, error }

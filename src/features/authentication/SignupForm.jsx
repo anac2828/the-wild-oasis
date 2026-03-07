@@ -1,24 +1,25 @@
-import { useForm } from 'react-hook-form';
-import Button from '../../ui/Button';
-import Form from '../../ui/Form';
-import FormRow from '../../ui/FormRow';
-import Input from '../../ui/Input';
-import { useSignup } from './useSignup';
+import { useForm } from 'react-hook-form'
+import Button from '../../ui/Button'
+import Form from '../../ui/Form'
+import FormRow from '../../ui/FormRow'
+import Input from '../../ui/Input'
+import { useSignup } from './useSignup'
 
 // Email regex: /\S+@\S+\.\S+/
 
 function SignupForm() {
-  const { signup, isLoading } = useSignup();
-  const { register, formState, getValues, handleSubmit, reset } = useForm();
-  const { errors } = formState;
+  const { signup, isLoading } = useSignup()
+  const { register, formState, getValues, handleSubmit, reset } = useForm()
+  const { errors } = formState
 
   function onSubmit({ fullName, email, password }) {
     // onSettled: reset() - clears the field
-    signup({ fullName, email, password }, { onSettled: () => reset() });
+    signup({ fullName, email, password }, { onSettled: () => reset() })
   }
 
   return (
     <Form onSubmit={handleSubmit(onSubmit)}>
+      {/* FULL NAME INPUT */}
       <FormRow label='Full name' error={errors?.fullName?.message}>
         <Input
           type='text'
@@ -28,6 +29,7 @@ function SignupForm() {
         />
       </FormRow>
 
+      {/* EMAIL INPUT */}
       <FormRow label='Email address' error={errors?.email?.message}>
         <Input
           type='email'
@@ -43,6 +45,7 @@ function SignupForm() {
         />
       </FormRow>
 
+      {/* PASSWORD INPUT */}
       <FormRow
         label='Password (min 8 characters)'
         error={errors?.password?.message}
@@ -61,6 +64,7 @@ function SignupForm() {
         />
       </FormRow>
 
+      {/* PASSWORD CONFIRM INPUT */}
       <FormRow label='Repeat password' error={errors?.passwordConfirm?.message}>
         <Input
           type='password'
@@ -74,15 +78,21 @@ function SignupForm() {
         />
       </FormRow>
 
+      {/* FORM BUTTONS */}
       <FormRow>
         {/* type is an HTML attribute! */}
-        <Button $variation='secondary' type='reset' onClick={reset}>
+        <Button
+          $variation='secondary'
+          type='reset'
+          onClick={reset}
+          disabled={isLoading}
+        >
           Cancel
         </Button>
         <Button disabled={isLoading}>Create new user</Button>
       </FormRow>
     </Form>
-  );
+  )
 }
 
-export default SignupForm;
+export default SignupForm

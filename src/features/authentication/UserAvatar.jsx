@@ -22,8 +22,9 @@ const Avatar = styled.img`
 `
 
 function UserAvatar() {
-  // const { user } = useUser()
-  const user = { user_metadata: { fullname: 'Ana Test', avatar: '' } }
+  const { user } = useUser()
+  // const user = { user_metadata: { fullname: 'Ana Test', avatar: '' } }
+  // avatar by default is saved as an empty string during the signup process. See apiAuth.js. User needs to update their profile /account to add an avatar image.
   const { fullName, avatar } = user.user_metadata
 
   return (

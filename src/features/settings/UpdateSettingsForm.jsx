@@ -1,13 +1,12 @@
-import { useSettings } from './useSettings';
-import { useUpdateSetting } from './useUpdateSetting';
-import Form from '../../ui/Form';
-import FormRow from '../../ui/FormRow';
-import Input from '../../ui/Input';
-import Spinner from '../../ui/Spinner';
+import { useSettings } from './useSettings'
+import { useUpdateSetting } from './useUpdateSetting'
+import Form from '../../ui/Form'
+import FormRow from '../../ui/FormRow'
+import Input from '../../ui/Input'
+import Spinner from '../../ui/Spinner'
 
 function UpdateSettingsForm() {
   // At the beginning settigs will be undefined because they have not loaded yet. Set settings to empty object to prevent errors.
-  const { isUpdating, updateSetting } = useUpdateSetting();
   const {
     isLoading,
     settings: {
@@ -16,13 +15,16 @@ function UpdateSettingsForm() {
       maxGuestsPerBooking,
       minBookingLength,
     } = {},
-  } = useSettings();
+  } = useSettings()
+  const { isUpdating, updateSetting } = useUpdateSetting()
 
-  if (isLoading) return <Spinner />;
+  // RETUN SPINNDER WHILE DATA LOADS
+  if (isLoading) return <Spinner />
 
+  // EVENT HANDLER
   function handleUpdate(value, field) {
-    if (!value) return;
-    updateSetting({ [field]: value });
+    if (!value) return
+    updateSetting({ [field]: value })
   }
 
   return (
@@ -33,6 +35,7 @@ function UpdateSettingsForm() {
           id='min-nights'
           defaultValue={minBookingLength}
           disabled={isUpdating}
+          // onBlur updates the value of the field when the user exists it
           onBlur={(e) => handleUpdate(e.target.value, 'minBookingLength')}
         />
       </FormRow>
@@ -64,7 +67,7 @@ function UpdateSettingsForm() {
         />
       </FormRow>
     </Form>
-  );
+  )
 }
 
-export default UpdateSettingsForm;
+export default UpdateSettingsForm

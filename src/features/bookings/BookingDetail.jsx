@@ -1,47 +1,47 @@
-import { HiArrowUpOnSquare } from 'react-icons/hi2';
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
+import { HiArrowUpOnSquare } from 'react-icons/hi2'
+import styled from 'styled-components'
+import { useNavigate } from 'react-router-dom'
 //
-import { useMoveBack } from '../../hooks/useMoveBack';
-import { useBooking } from './useBooking';
-import { useDeleteBooking } from './useDeleteBooking';
-import useCheckout from '../check-in-out/useCheckout';
+import { useMoveBack } from '../../hooks/useMoveBack'
+import { useBooking } from './useBooking'
+import { useDeleteBooking } from './useDeleteBooking'
+import useCheckout from '../check-in-out/useCheckout'
 //
-import BookingDataBox from './BookingDataBox';
-import Row from '../../ui/Row';
-import Heading from '../../ui/Heading';
-import Tag from '../../ui/Tag';
-import ButtonGroup from '../../ui/ButtonGroup';
-import Button from '../../ui/Button';
-import ButtonText from '../../ui/ButtonText';
-import Spinner from '../../ui/Spinner';
-import Modal from '../../ui/Modal';
-import ConfirmDelete from '../../ui/ConfirmDelete';
-import Empty from '../../ui/Empty';
+import BookingDataBox from './BookingDataBox'
+import Row from '../../ui/Row'
+import Heading from '../../ui/Heading'
+import Tag from '../../ui/Tag'
+import ButtonGroup from '../../ui/ButtonGroup'
+import Button from '../../ui/Button'
+import ButtonText from '../../ui/ButtonText'
+import Spinner from '../../ui/Spinner'
+import Modal from '../../ui/Modal'
+import ConfirmDelete from '../../ui/ConfirmDelete'
+import Empty from '../../ui/Empty'
 
 const HeadingGroup = styled.div`
   display: flex;
   gap: 2.4rem;
   align-items: center;
-`;
+`
 
+//* COMPONENT */
 function BookingDetail() {
-  const navigate = useNavigate();
-  const moveBack = useMoveBack();
-  const { isDeleting, deleteBooking } = useDeleteBooking();
-  const { checkout, isCheckingOut } = useCheckout();
-  const { booking = {}, isLoading, error } = useBooking();
-  const { status, id: bookingId } = booking;
-
-  if (isLoading) return <Spinner />;
-  // if (!booking) return <Empty resourceName='booking' />; // THIS WILL RENDER THE ErrorFallback component
-  if (error) return <Empty resourceName='booking' />;
+  const navigate = useNavigate()
+  const moveBack = useMoveBack()
+  const { isDeleting, deleteBooking } = useDeleteBooking()
+  const { checkout, isCheckingOut } = useCheckout()
+  const { booking = {}, isLoading, error } = useBooking()
+  const { status, id: bookingId } = booking
 
   const statusToTagName = {
     unconfirmed: 'blue',
     'checked-in': 'green',
     'checked-out': 'silver',
-  };
+  }
+
+  if (isLoading) return <Spinner />
+  if (!booking || error) return <Empty resourceName='booking' error={error} /> // THIS WILL RENDER THE ErrorFallback component
 
   return (
     <>
@@ -77,12 +77,12 @@ function BookingDetail() {
 
         <Modal>
           {/* DELETE */}
-          <Modal.Open opens='delete'>
+          <Modal.Open windowNameToOpen='delete'>
             <Button $variation='danger'>Delete Booking</Button>
           </Modal.Open>
 
           {/* CONFIRM DELETE */}
-          <Modal.Window name='delete'>
+          <Modal.Window windowName='delete'>
             <ConfirmDelete
               resourceName='bookings'
               disabled={isDeleting}
@@ -99,7 +99,7 @@ function BookingDetail() {
         </Button>
       </ButtonGroup>
     </>
-  );
+  )
 }
 
-export default BookingDetail;
+export default BookingDetail

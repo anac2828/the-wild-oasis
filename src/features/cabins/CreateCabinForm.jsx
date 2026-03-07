@@ -14,34 +14,37 @@ import Textarea from '../../ui/Textarea'
 // Close onCloseModal is the close function that comes from the Modal Context component
 function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
   // * useFORM HOOKD
+  // Props received from CabinRow
+  const { id: editId, ...editValues } = cabinToEdit
+  // Returns true if there is an editId
+  const isEditSession = Boolean(editId)
+
   // register() links the input fields to the useForm hook, reset() will clear the form fields, getValue() returns the value if a field
   const { register, reset, handleSubmit, getValues, formState } = useForm({
     // To prefill form fields only when editing a cabin
     defaultValues: isEditSession ? editValues : {},
   })
+
   const { errors } = formState
 
   // * API FUNCTIONS
   const { isCreating, createCabin } = useCreateCabin()
   const { isEditing, editCabin } = useEditCabin()
-  // Props received from CabinRow
-  const { id: editId, ...editValues } = cabinToEdit
-  // Returns true if there is an editId
-  const isEditSession = Boolean(editId)
+  // use isInProgress to disable Input and button
   const isInProgress = isCreating || isEditing
 
   // * EVENT HANDELER
   function onSubmit(data) {
     // data = data from Form fields
     const image = typeof data.image === 'string' ? data.image : data.image[0]
-
+    console.log(data.image)
     if (isEditSession)
       editCabin(
         { newCabinData: { ...data, image }, id: editId },
         {
-          // onSuccess gets access to the data returned by the createCabin function. We call onSuccess here because the reset() function is a useForm function that could not be used on the useCreateCabin hook.
+          // onSuccess gets access to the data returned by the editCabin function.
           onSuccess: () => {
-            reset()
+            reset() // reset() is a react-hook-form function accessible where the useForm hook is used.
             onCloseModal?.() //Closes modal after it is edited
           },
         },
@@ -64,10 +67,9 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
   return (
     // FormRow displays the label, error message, and takes the input component as a child
     // Input is just a styled input component
-    // Type prop is to style the form if it inside a modal.
     <Form
       onSubmit={handleSubmit(onSubmit)}
-      type={onCloseModal ? 'modal' : 'regular'}
+      type={onCloseModal ? 'modal' : 'regular'} // Type prop is to style the form if it inside a modal.
     >
       {/* NAME  */}
       <FormRow label={'Cabin name'} error={errors?.name?.message}>
@@ -156,7 +158,7 @@ function CreateCabinForm({ cabinToEdit = {}, onCloseModal }) {
         <Button
           $variation='secondary'
           type='reset' // HTML attribute
-          onClick={() => onCloseModal?.()} // Will only work if the onCloseModal exists
+          onClick={() => onCloseModal?.()} // Will call onClaoseModal() if the onCloseModal exists
         >
           Cancel
         </Button>

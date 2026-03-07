@@ -1,30 +1,30 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 import {
   HiArrowDownOnSquare,
   HiArrowUpOnSquare,
   HiTrash,
-} from 'react-icons/hi2';
-import { format, isToday } from 'date-fns';
-import { useNavigate } from 'react-router-dom';
+} from 'react-icons/hi2'
+import { format, isToday } from 'date-fns'
+import { useNavigate } from 'react-router-dom'
 
-import { useDeleteBooking } from './useDeleteBooking';
+import { useDeleteBooking } from './useDeleteBooking'
 
-import { formatCurrency } from '../../utils/helpers';
-import { formatDistanceFromNow } from '../../utils/helpers';
-import useCheckout from '../check-in-out/useCheckout';
+import { formatCurrency } from '../../utils/helpers'
+import { formatDistanceFromNow } from '../../utils/helpers'
+import useCheckout from '../check-in-out/useCheckout'
 
-import Tag from '../../ui/Tag';
-import Table from '../../ui/Table';
-import Menus from '../../ui/Menus';
-import Modal from '../../ui/Modal';
-import ConfirmDelete from '../../ui/ConfirmDelete';
+import Tag from '../../ui/Tag'
+import Table from '../../ui/Table'
+import Menus from '../../ui/Menus'
+import Modal from '../../ui/Modal'
+import ConfirmDelete from '../../ui/ConfirmDelete'
 
 const Cabin = styled.div`
   font-size: 1.6rem;
   font-weight: 600;
   color: var(--color-grey-600);
   font-family: 'Sono';
-`;
+`
 
 const Stacked = styled.div`
   display: flex;
@@ -39,17 +39,19 @@ const Stacked = styled.div`
     color: var(--color-grey-500);
     font-size: 1.2rem;
   }
-`;
+`
 
 const Amount = styled.div`
   font-family: 'Sono';
   font-weight: 500;
-`;
+`
 
 const Paid = styled.div`
   font-weight: ${(props) => (props.$paid ? '600' : '')};
-`;
+`
 
+// ** COMPONENT **
+// Booking data BookingTable.jsx
 function BookingRow({
   booking: {
     id: bookingId,
@@ -63,14 +65,14 @@ function BookingRow({
     cabins: { name: cabinName }, //Renames the cabins data
   },
 }) {
-  const { isDeleting, deleteBooking } = useDeleteBooking();
-  const { checkout, isCheckingOut } = useCheckout();
-  const navigate = useNavigate();
+  const { isDeleting, deleteBooking } = useDeleteBooking()
+  const { checkout, isCheckingOut } = useCheckout()
+  const navigate = useNavigate()
   const statusToTagName = {
     unconfirmed: 'blue',
     'checked-in': 'green',
     'checked-out': 'silver',
-  }; //Used to update the color of the Tag component
+  } //Used to update the color of the Tag component
 
   return (
     <Table.Row>
@@ -96,7 +98,7 @@ function BookingRow({
         </span>
       </Stacked>
 
-      {/* Booking status */}
+      {/* Booking status tag*/}
       <Tag type={statusToTagName[status]}>{status.replace('-', ' ')}</Tag>
 
       {/* Booking paid status */}
@@ -106,10 +108,14 @@ function BookingRow({
       <Amount>{formatCurrency(totalPrice)}</Amount>
 
       {/* BUTTONS TO CHECK IN AND OUT OR DELETE BOOKING */}
-      {/* The Modal component is need because the delete button will open a window */}
+      {/* The Modal component gives access to the context values */}
       <Modal>
+        {/* Styled component */}
         <Menus.Menu>
+          {/* Three dots button */}
           <Menus.Toggle id={bookingId} />
+
+          {/* LIST OF BUTTONS */}
           <Menus.List id={bookingId}>
             {/* SEE DETAILS */}
             <Menus.Button
@@ -140,15 +146,15 @@ function BookingRow({
               </Menus.Button>
             )}
 
-            {/* DELETE Will open Modal window below*/}
-            <Modal.Open opens='delete'>
+            {/* DELETE Will open Modal window below */}
+            <Modal.Open windowNameToOpen='delete'>
               <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
             </Modal.Open>
           </Menus.List>
         </Menus.Menu>
 
         {/* CONFIRM DELETE MODAL WINDOW*/}
-        <Modal.Window name='delete'>
+        <Modal.Window windowName='delete'>
           <ConfirmDelete
             resourceName='bookings'
             disabled={isDeleting}
@@ -157,7 +163,7 @@ function BookingRow({
         </Modal.Window>
       </Modal>
     </Table.Row>
-  );
+  )
 }
 
-export default BookingRow;
+export default BookingRow

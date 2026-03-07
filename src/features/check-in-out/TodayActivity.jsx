@@ -1,10 +1,10 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
-import Heading from '../../ui/Heading';
-import Row from '../../ui/Row';
-import Spinner from '../../ui/Spinner';
-import TodayItem from './TodayItem';
-import { useTodayActivity } from './useTodayActivity';
+import Heading from '../../ui/Heading'
+import Row from '../../ui/Row'
+import Spinner from '../../ui/Spinner'
+import TodayItem from './TodayItem'
+import { useTodayActivity } from './useTodayActivity'
 
 const StyledToday = styled.div`
   /* Box */
@@ -18,7 +18,7 @@ const StyledToday = styled.div`
   gap: 2.4rem;
   grid-column: 1 / span 2;
   padding-top: 2.4rem;
-`;
+`
 
 const TodayList = styled.ul`
   overflow: scroll;
@@ -30,18 +30,19 @@ const TodayList = styled.ul`
   }
   scrollbar-width: none;
   -ms-overflow-style: none;
-`;
+`
 
 const NoActivity = styled.p`
   text-align: center;
   font-size: 1.8rem;
   font-weight: 500;
   margin-top: 0.8rem;
-`;
+`
 
+// ** COMPONENT - Displayed in the DashboardLayout.jsx
 function TodayActivity() {
-  const { activities, isLoading } = useTodayActivity();
-
+  const { activities, isLoading } = useTodayActivity()
+  // activities is the bookings that need to be checked in or checked out.
   return (
     <StyledToday>
       <Row type='horizontal'>
@@ -60,7 +61,7 @@ function TodayActivity() {
         <NoActivity>No activity today...</NoActivity>
       )}
     </StyledToday>
-  );
+  )
 }
 
-export default TodayActivity;
+export default TodayActivity

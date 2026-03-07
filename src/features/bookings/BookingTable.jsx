@@ -1,18 +1,19 @@
-import { useBookings } from './useBookings';
-import BookingRow from './BookingRow';
-import Table from '../../ui/Table';
-import Menus from '../../ui/Menus';
-import Empty from '../../ui/Empty';
-import Spinner from '../../ui/Spinner';
-import Pagination from '../../ui/Pagination';
+import { useBookings } from './useBookings'
+import BookingRow from './BookingRow'
+import Table from '../../ui/Table'
+import Menus from '../../ui/Menus'
+import Empty from '../../ui/Empty'
+import Spinner from '../../ui/Spinner'
+import Pagination from '../../ui/Pagination'
 
 function BookingTable() {
-  const { isLoading, bookings, count } = useBookings();
+  const { isLoading, bookings, count } = useBookings()
 
-  if (isLoading) return <Spinner />;
-  if (!bookings.length) return <Empty resourceName='bookings' />;
+  if (isLoading) return <Spinner />
+  if (!bookings.length) return <Empty resourceName='bookings' />
 
   return (
+    //Provides access to the context values to the Menus children components
     <Menus>
       <Table $columns='0.6fr 2fr 2.4fr 1.4fr 1fr 1fr 3.2rem'>
         <Table.Header>
@@ -27,6 +28,7 @@ function BookingTable() {
 
         <Table.Body
           data={bookings}
+          // Render tells component what to do with the data
           render={(booking) => (
             <BookingRow key={booking.id} booking={booking} />
           )}
@@ -37,7 +39,7 @@ function BookingTable() {
         <Pagination count={count} />
       </Table.Footer>
     </Menus>
-  );
+  )
 }
 
-export default BookingTable;
+export default BookingTable

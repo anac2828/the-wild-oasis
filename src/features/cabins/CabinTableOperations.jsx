@@ -1,20 +1,20 @@
-import TableOperations from '../../ui/TableOperations';
-import Filter from '../../ui/Filter';
-import SortBy from '../../ui/SortBy';
+import TableOperations from '../../ui/TableOperations'
+import Filter from '../../ui/Filter'
+import SortBy from '../../ui/SortBy'
 
 function CabinTableOperations() {
   return (
+    // TableOperations is a styled component
     <TableOperations>
-      <TableOperations>
-        <Filter
-          filterField='discount'
-          options={[
-            { value: 'all', label: 'All' },
-            { value: 'no-discount', label: 'No discount' },
-            { value: 'with-discount', label: 'With discount' },
-          ]}
-        />
-      </TableOperations>
+      {/* BUTTON THAT SETS THE FILTER OPTION */}
+      <Filter
+        filterField='discount'
+        options={[
+          { value: 'all', label: 'All' },
+          { value: 'no-discount', label: 'No discount' },
+          { value: 'with-discount', label: 'With discount' },
+        ]}
+      />
 
       <SortBy
         options={[
@@ -27,7 +27,7 @@ function CabinTableOperations() {
         ]}
       />
     </TableOperations>
-  );
+  )
 }
 
-export default CabinTableOperations;
+export default CabinTableOperations

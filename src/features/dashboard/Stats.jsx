@@ -1,52 +1,59 @@
-import { formatCurrency } from '../../utils/helpers';
-import Stat from './Stat';
+import { formatCurrency } from '../../utils/helpers'
+import Stat from './Stat'
 import {
   HiOutlineBriefcase,
   HiOutlineBanknotes,
   HiOutlineCalendarDays,
   HiOutlineChartBar,
-} from 'react-icons/hi2';
+} from 'react-icons/hi2'
 
+// ** COMPONENT **
 function Stats({ bookings, confirmedStays, numDays, cabinCount }) {
-  // 1.
-  const numBookings = bookings.length;
+  // 1. TOTAL BOOKINGS - BUT NOT CONFIRMED
+  const numBookings = bookings.length
   // 2. Add amount for all bookings
-  const sales = bookings.reduce((acc, cur) => acc + cur.totalPrice, 0);
-  // 3.
-  const checkins = confirmedStays.length;
-  // 4. Number of checked in nights / all available nights / (number of days * number of cabins)
-  const occupation =
+  const sales = bookings.reduce((acc, cur) => acc + cur.totalPrice, 0)
+  // 3. REALIZED BOOKINGS
+  const checkins = confirmedStays.length
+  // 4. Number of checked in nights - all available nights / (number of days * number of cabins)
+  const occupancy =
     confirmedStays.reduce((acc, cur) => acc + cur.numNights, 0) /
-    (numDays * cabinCount);
+    (numDays * cabinCount)
 
   return (
     <>
+      {/* BOOKINGS */}
       <Stat
         title='Bookings'
         color='blue'
         icon={<HiOutlineBriefcase />}
         value={numBookings}
       />
+      {/* SALES PROJECTED */}
       <Stat
         title='Sales'
         color='green'
         icon={<HiOutlineBanknotes />}
         value={formatCurrency(sales)}
       />
+
+      {/* ACTUAL STAYS */}
       <Stat
         title='Check ins'
         color='indigo'
         icon={<HiOutlineCalendarDays />}
         value={checkins}
       />
+
+      {/* OCCUPANCY RATE */}
       <Stat
         title='Occupancy rate'
         color='yellow'
         icon={<HiOutlineChartBar />}
-        value={Math.round(occupation * 100) + '%'}
+        value={Math.round(occupancy * 100) + '%'}
       />
     </>
-  );
+  )
 }
 
-export default Stats;
+export default Stats

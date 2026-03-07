@@ -64,9 +64,11 @@ function CabinRow({ cabin }) {
     id: cabinId,
     description,
   } = cabin
+  // Custom hooks to create and delete cabins
   const { isDeleting, deleteCabin } = useDeleteCabin()
   const { isCreating, createCabin } = useCreateCabin()
 
+  // Creates a copy of a cabin
   function handleDuplicate() {
     createCabin({
       name: `Copy of ${name}`,
@@ -91,38 +93,48 @@ function CabinRow({ cabin }) {
       )}
       <div>
         {/* Open cabin form to edit */}
+        {/* Modal provides the context to the children inside the Modal Window. Modal is not a styled component*/}
         <Modal>
+          {/* Menu is a styled div component that holds the toggle button and list */}
           <Menus.Menu>
+            {/* Three dots button to open and close the Menus.List */}
             <Menus.Toggle id={cabinId} />
+
+            {/* LIST OF BUTTONS */}
+            {/* To open Menus.List (ul) cabinId must match the Toggle cabinId */}
             <Menus.List id={cabinId}>
+              {/* Menus.Button is inside an li element */}
+
               {/* DUPLICATE CABIN - This does not open a modal window, so it does not need a Modal.Open*/}
               <Menus.Button
                 icon={<HiSquare2Stack />}
                 onClick={handleDuplicate}
-                disabled={isCreating}
+                disaled={isCreating}
               >
                 Duplicate
               </Menus.Button>
 
-              {/* EDIT CABIN OPENS MODAL WINDOW*/}
-              <Modal.Open opens='cabin-form'>
-                <Menus.Button icon={<HiPencil />} opens='cabin-form'>
-                  Edit
-                </Menus.Button>
+              {/* BUTTONS TO OPEN MODAL WINDOW - Model.Open is not a styled component*/}
+              {/* Edit cabin button */}
+              <Modal.Open windowNameToOpen='cabin-form'>
+                {/* When the button is clicked the CreateCabinForm window will open and the Menus.List will close. This works because the button is inside the Modal.Open component and calls both the open() in the Modal.Open and handleClick() in the Menus.Button  */}
+                <Menus.Button icon={<HiPencil />}>Edit</Menus.Button>
               </Modal.Open>
 
-              {/* DELETE CABIN OPENS MODAL WINDOW */}
-              <Modal.Open opens='delete'>
+              {/* Delete cabin button */}
+              <Modal.Open windowNameToOpen='delete'>
                 <Menus.Button icon={<HiTrash />}>Delete</Menus.Button>
               </Modal.Open>
             </Menus.List>
 
-            {/* MODAL WIDOW - opens when edit or delete is clicked */}
-            <Modal.Window name='cabin-form'>
+            {/* MODAL WIDOWS  */}
+            {/* Edit cabin form */}
+            <Modal.Window windowName='cabin-form'>
               <CreateCabinForm cabinToEdit={cabin} />
             </Modal.Window>
 
-            <Modal.Window name='delete'>
+            {/* Delete cabin confirmation window */}
+            <Modal.Window windowName='delete'>
               <ConfirmDelete
                 resourceName='cabins'
                 disabled={isDeleting}

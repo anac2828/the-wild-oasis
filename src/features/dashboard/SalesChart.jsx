@@ -1,7 +1,7 @@
-import styled from 'styled-components';
-import { useDarkMode } from '../../context/DarkModeContext';
-import DashboardBox from './DashboardBox';
-import Heading from '../../ui/Heading';
+import styled from 'styled-components'
+import { useDarkMode } from '../../context/DarkModeContext'
+import DashboardBox from './DashboardBox'
+import Heading from '../../ui/Heading'
 import {
   AreaChart,
   CartesianGrid,
@@ -10,8 +10,8 @@ import {
   XAxis,
   YAxis,
   Tooltip,
-} from 'recharts';
-import { eachDayOfInterval, subDays, format, isSameDay } from 'date-fns';
+} from 'recharts'
+import { eachDayOfInterval, subDays, format, isSameDay } from 'date-fns'
 
 const StyledSalesChart = styled(DashboardBox)`
   grid-column: 1 / -1;
@@ -21,32 +21,38 @@ const StyledSalesChart = styled(DashboardBox)`
   & .recharts-cartesian-grid-vertical line {
     stroke: var(--color-grey-300);
   }
-`;
+`
 
+// ** COMPONENT **
 function SalesChart({ bookings, numDays }) {
-  const { isDarkMode } = useDarkMode();
+  const { isDarkMode } = useDarkMode()
 
   // numDays - filter params in URL
 
-  // Creates array of dates based on from "current day" to the numDays selected by user
+  // Creates array of dates based on "current day" to the numDays selected by user
   const allDates = eachDayOfInterval({
     // (Today minus numDays)
     start: subDays(new Date(), numDays - 1),
     end: new Date(),
-  });
+  })
 
+  // Return booking data based on the date array above
   const data = allDates.map((date) => {
     return {
+      // Displays in tooltip and XAxis
       label: format(date, 'MMM dd'),
+      //Booking sales for the day
       totalSales: bookings
         .filter((booking) => isSameDay(date, new Date(booking.created_at)))
         .reduce((acc, cur) => acc + cur.totalPrice, 0),
+      //Booking extra sales (breakfast) for the day
       extrasSales: bookings
         .filter((booking) => isSameDay(date, new Date(booking.created_at)))
         .reduce((acc, cur) => acc + cur.extrasPrice, 0),
-    };
-  });
+    }
+  })
 
+  // GRAPH COLORS
   const colors = isDarkMode
     ? {
         totalSales: { stroke: '#4f46e5', fill: '#4f46e5' },
@@ -59,7 +65,7 @@ function SalesChart({ bookings, numDays }) {
         extrasSales: { stroke: '#16a34a', fill: '#dcfce7' },
         text: '#374151',
         background: '#fff',
-      };
+      }
 
   return (
     <StyledSalesChart>
@@ -69,19 +75,28 @@ function SalesChart({ bookings, numDays }) {
       </Heading>
       <ResponsiveContainer height={300} width='100%'>
         <AreaChart data={data}>
+          {/* X AXIS (DATES) */}
           <XAxis
             dataKey='label'
-            tick={{ fill: colors.text }}
-            tickLine={{ stroke: colors.text }}
+            tick={{ fill: colors.text }} //Label color
+            tickLine={{ stroke: colors.text }} //Line marker color
           />
+
+          {/* Y AXIS (SALES) */}
           <YAxis
             unit='$'
             tick={{ fill: colors.text }}
             tickLine={{ stroke: colors.text }}
           />
+
+          {/* WINDOW WHERE LINE GRAPH DISPLAYS */}
+          {/* strokeDasharray - grid stroke dash gap */}
           <CartesianGrid strokeDasharray='4' />
+          {/* When mouse hovers over chart */}
           <Tooltip contentStyle={{ backgroundColor: colors.background }} />
+          {/* SALES LINE CHART */}
           <Area
+            // key that references the object in the data (see data object above)
             dataKey='totalSales'
             type='monotone'
             stroke={colors.totalSales.stroke}
@@ -90,6 +105,7 @@ function SalesChart({ bookings, numDays }) {
             name='Total Sales'
             unit='$'
           />
+          {/* EXTRA SALES LINE CHART - (Breakfast) */}
           <Area
             dataKey='extrasSales'
             type='monotone'
@@ -102,7 +118,7 @@ function SalesChart({ bookings, numDays }) {
         </AreaChart>
       </ResponsiveContainer>
     </StyledSalesChart>
-  );
+  )
 }
 
-export default SalesChart;
+export default SalesChart

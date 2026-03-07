@@ -1,9 +1,12 @@
-import { useQuery } from '@tanstack/react-query';
-import { getBooking } from '../../services/apiBookings';
-import { useParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query'
+import { getBooking } from '../../services/apiBookings'
+import { useParams } from 'react-router-dom'
 
 export function useBooking() {
-  const { bookingId } = useParams(); //Get the id from the URL when a user navigates to a booking details page
+  // userSearchParams() gets the query info in the URL
+  // http://localhost:5173/bookings?status=checked-in
+  // http://localhost:5173/bookings/412
+  const { bookingId } = useParams() //Get the id from the URL when a user navigates to a booking details page
 
   const {
     isLoading,
@@ -15,7 +18,7 @@ export function useBooking() {
     queryFn: () => getBooking(bookingId),
     // React Query will not try to re-fetch data if it does not exist
     retry: false,
-  });
+  })
 
-  return { isLoading, booking, error };
+  return { isLoading, booking, error }
 }
