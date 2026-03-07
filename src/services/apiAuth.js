@@ -1,10 +1,7 @@
 import supabase from './supabase'
 import { supabaseUrl } from './supabase'
 
-const BASE_URL =
-  import.meta.env.MODE === 'production'
-    ? import.meta.env.VITE_PROD_BASE_URL
-    : import.meta.env.VITE_DEV_BASE_URL
+const BASE_URL = 'https://the-wild-oasis24.vercel.app'
 
 console.log(BASE_URL)
 // * SIGN UP
