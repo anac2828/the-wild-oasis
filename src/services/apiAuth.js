@@ -1,81 +1,104 @@
-import supabase from './supabase';
-import { supabaseUrl } from './supabase';
+import supabase from './supabase'
+import { supabaseUrl } from './supabase'
+
+const BASE_URL =
+  import.meta.env.MODE === 'production'
+    ? import.meta.env.VITE_PROD_BASE_URL
+    : import.meta.env.VITE_DEV_BASE_URL
 
 // * SIGN UP
 export async function signup({ fullName, email, password }) {
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
-    // to add aditional data to created user
+    // options will save the data object under user.user_metadata to add aditional information
+    // Once a user is signed up
     options: { data: { fullName, avatar: '' } },
-  });
+  })
 
-  if (error) throw new Error(error.message);
-  return data;
+  if (error) throw new Error(error.message)
+  return data
 }
 
 // * LOGIN
 export async function login({ email, password }) {
+  // When user logs in. A session will be saved in the local storage that expires in 60 minutes
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password,
-  });
+  })
 
-  if (error) throw new Error(error.message);
+  if (error) throw new Error(error.message)
 
-  return data;
+  return data
 }
 
-// * GET CURRENT USER
-export async function getCurrentUser() {
-  // * 1 Will get session from local storage
-  const { data: session } = await supabase.auth.getSession();
+// * RESET PASSWORD
 
-  if (!session.session) return null;
-
-  //* 2 If there is a session it will fetch the user from supabase
-  const { data, error } = await supabase.auth.getUser();
-
-  if (error) throw new Error(error.message);
-
-  return data?.user;
+export async function resetPassword(email) {
+  const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${BASE_URL}/account`,
+  })
+  console.log(data, error)
 }
 
 // * LOGOUT
 export async function logout() {
-  const { error } = await supabase.auth.signOut();
-  if (error) throw new Error(error.message);
+  const { error } = await supabase.auth.signOut()
+  if (error) throw new Error(error.message)
+}
+
+// * GET CURRENT USER - Check if there is a user with a current session
+export async function getCurrentUser() {
+  //  1 Will get session from local storage saved when the user logged in with login() above.
+  const { data: session } = await supabase.auth.getSession()
+
+  // Error handler
+  if (!session.session) return null
+
+  // 2 If there is a session it will fetch the user data from supabase and it will include a role: "authenticated"
+  const { data, error } = await supabase.auth.getUser()
+
+  // Error handler
+  if (error) throw new Error(error.message)
+
+  return data?.user
 }
 
 // * UPDATE CURRENT USER
 export async function updateCurrentUser({ password, fullName, avatar }) {
   // 1. Update password or fullname
-  let updateData;
-  if (password) updateData = { password };
-  if (fullName) updateData = { data: { fullName } };
+  let updateData
+  if (password) updateData = { password }
+  if (fullName) updateData = { data: { fullName } }
 
-  const { data, error } = await supabase.auth.updateUser(updateData);
+  const { data, error } = await supabase.auth.updateUser(updateData)
 
-  if (error) throw new Error(error.message);
-  if (!avatar) return data;
+  if (error) throw new Error(error.message)
+  // End of function if no avatar to upload
+  if (!avatar) return data
 
   // 2. Upload the avatar image to storage bucket
-  const fileName = `avatar-${data.user.id}-${Math.random()}`;
+  const fileName = `avatar-${data.user.id}-${Math.random()}`
 
   const { error: storageError } = await supabase.storage
     .from('avatars')
-    .upload(fileName, avatar);
+    .upload(fileName, avatar)
 
-  if (storageError) throw new Error(storageError.message);
+  // Error handler
+  if (storageError) throw new Error(storageError.message)
 
-  // 3. Update avatar with avatar uploaded
+  // 3. Update avatar url
   const { data: updateUserWithAvatar, error: error2 } =
     await supabase.auth.updateUser({
       data: {
         avatar: `${supabaseUrl}/storage/v1/object/public/avatars/${fileName}`,
       },
-    });
+    })
 
-  if (error2) throw new Error(error2.message);
-  return updateUserWithAvatar;
+  // Error handler
+  if (error2) throw new Error(error2.message)
+
+  // Return data
+  return updateUserWithAvatar
 }

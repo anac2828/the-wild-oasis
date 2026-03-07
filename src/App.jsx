@@ -12,6 +12,7 @@ import Users from './pages/Users'
 import Settings from './pages/Settings'
 import Account from './pages/Account'
 import Login from './pages/Login'
+import ResetPassword from './pages/ResetPassword'
 import PageNotFound from './pages/PageNotFound'
 import AppLayout from './ui/AppLayout'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
@@ -49,7 +50,7 @@ function App() {
             >
               {/* NESTED ROUTES */}
               {/* An index route is needed.}
-              {/* Routes render inside the AppLayout in the Outlet component */}
+              {/* Routes render inside the AppLayout in the Outlet component. This routes are also children of the ProtectedRoute */}
               {/* When user goes to the BASE URL "/" they will be redirected to "/dashboard" and replace will overwrite the history stack in the browser */}
               <Route index element={<Navigate replace to='dashboard' />} />
               <Route path='dashboard' element={<Dashboard />} />
@@ -63,6 +64,7 @@ function App() {
             </Route>
             {/* Will not be rendered inside the AppLayout component */}
             <Route path='login' element={<Login />} />
+            <Route path='reset-password' element={<ResetPassword />} />
             {/* ERROR HANDLING FOR ROUTES NOT FOUND */}
             <Route path='*' element={<PageNotFound />} />
           </Routes>

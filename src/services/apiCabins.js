@@ -50,7 +50,7 @@ export async function createEditCabin(newCabin, id) {
   // B - Query if updating a cabin. eq() selects the cabin to be updated based on the id field
   if (id) query = query.update({ ...newCabin, image: imagePath }).eq('id', id)
 
-  // Return the created or edited cabin
+  // Return the created or edited cabin data using .select().single()
   const { data, error } = await query.select().single()
 
   // Cabin error handler

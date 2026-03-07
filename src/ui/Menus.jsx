@@ -1,14 +1,14 @@
-import { createContext, useContext, useState } from 'react';
-import { createPortal } from 'react-dom';
-import { HiEllipsisVertical } from 'react-icons/hi2';
-import styled from 'styled-components';
-import { useCloseModal } from '../hooks/useCloseModal';
+import { createContext, useContext, useState } from 'react'
+import { createPortal } from 'react-dom'
+import { HiEllipsisVertical } from 'react-icons/hi2'
+import styled from 'styled-components'
+import { useCloseModal } from '../hooks/useCloseModal'
 
 const Menu = styled.div`
   display: flex;
   align-items: center;
   justify-content: flex-end;
-`;
+`
 
 const StyledToggle = styled.button`
   background: none;
@@ -27,7 +27,7 @@ const StyledToggle = styled.button`
     height: 2.4rem;
     color: var(--color-grey-700);
   }
-`;
+`
 
 const StyledList = styled.ul`
   position: fixed;
@@ -38,7 +38,7 @@ const StyledList = styled.ul`
 
   right: ${(props) => props.$position.x}px;
   top: ${(props) => props.$position.y}px;
-`;
+`
 
 const StyledButton = styled.button`
   width: 100%;
@@ -63,94 +63,101 @@ const StyledButton = styled.button`
     color: var(--color-grey-400);
     transition: all 0.3s;
   }
-`;
+`
 
 //* CONTEXT
-const MenusContext = createContext();
+const MenusContext = createContext()
 
 //* PARENT
 function Menus({ children }) {
-  const [openId, setOpenId] = useState(''); // Keeps track of which window is open
-  const [position, setPostion] = useState(null); // Sets the postion of the Menu window
-  const close = () => setOpenId('');
-  const open = setOpenId; //Open function sets the id of which window will be open
+  const [openId, setOpenId] = useState('') // Keeps track of which window is open
+  const [position, setPostion] = useState(null) // Sets the postion of the Menu window
+  const close = () => setOpenId('')
+  const open = setOpenId //Open function updates the openId
   return (
     <MenusContext.Provider
       value={{ openId, close, open, position, setPostion }}
     >
       {children}
     </MenusContext.Provider>
-  );
+  )
 }
 
 //* CHILDREN
+
+// TOGGLE BUTTON TO OPEN LIST
 function Toggle({ id }) {
   // id = cabinId
-  const { openId, close, open, setPostion } = useContext(MenusContext);
+  const { openId, close, open, setPostion } = useContext(MenusContext)
 
   function handleClick(e) {
-    // This will fix the bug where the 3 dot menu would not close
-    e.stopPropagation();
-    // If openID is an empty string or it is not the same as the ID it will open the menus window otherwise it will close it
-    openId === '' || openId !== id ? open(id) : close();
-    // Gets info of button clicked on to set the position on the window
-    const rect = e.target.closest('button').getBoundingClientRect();
+    // This will fix the bug where the 3 dot menu would not close the window
+    e.stopPropagation()
+    // Update openId to id passed in the CabinRow or set openId to ""
+    openId === '' || openId !== id ? open(id) : close()
+    // Gets x and y position of button clicked on to set the position of the List window
+    const rect = e.target.closest('button').getBoundingClientRect()
 
-    // Determines the position of the menus window
+    // Determines the position of the Menus.List window
     setPostion({
       x: window.innerWidth - rect.width - rect.x,
       y: rect.y + rect.height + 8,
-    });
+    })
   }
   // Toggle button
   return (
     <StyledToggle onClick={handleClick}>
       <HiEllipsisVertical />
     </StyledToggle>
-  );
+  )
 }
 
+// LIST TO DISPLAY BUTTONS
 function List({ id, children }) {
   // id = cabinId
-  const { openId, position, close } = useContext(MenusContext);
+  const { openId, position, close } = useContext(MenusContext)
 
   // closes List window if clicked outside. Pass in false for the menu to close when the 3 dots are clicked.
-  const ref = useCloseModal(close, false);
+  const ref = useCloseModal(close, false)
 
-  if (openId !== id) return null;
+  // If openId and id are not the same don't open List
+  if (openId !== id) return null
 
-  // If openId matches the id of the cabin clicked on, the List component with the buttons will be displayed
+  // If openId matches the id of the cabinId clicked on, the List component with the buttons will be displayed
   return createPortal(
     <StyledList $position={{ x: position.x, y: position.y }} ref={ref}>
       {children}
     </StyledList>,
-    document.body
-  );
+    document.body,
+  )
 }
 
+// BUTTONS TO DUPLICATE, EDIT, OR DELETE
 // "onClick" comes from the CabinRow
 function Button({ children, icon, onClick }) {
-  const { close } = useContext(MenusContext);
+  const { close } = useContext(MenusContext)
 
   function handleClick() {
-    onClick?.();
-    close(); // Closes menu window
+    // onClick() will be called here if one is passed as a prop on the Menus.Button component
+    // If the Menus.Button is inside the Model.Open component the onClick() is the function passed in the cloneElement()
+    onClick?.()
+    close() // Closes menu window
   }
 
   return (
     // "li" is used because it will be rendered inside the "List" component
     <li>
+      {/* onClick calls the handleClick function*/}
       <StyledButton onClick={handleClick}>
         {icon} <span>{children}</span>
       </StyledButton>
     </li>
-  );
+  )
 }
 
-// Menu is the styled component
-Menus.Menu = Menu;
-Menus.Toggle = Toggle;
-Menus.List = List;
-Menus.Button = Button;
+Menus.Menu = Menu // Menu is the styled component
+Menus.Toggle = Toggle
+Menus.List = List
+Menus.Button = Button
 
-export default Menus;
+export default Menus

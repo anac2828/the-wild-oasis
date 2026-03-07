@@ -82,6 +82,8 @@ const GlobalStyles = createGlobalStyle`
 --image-opacity: 90%;
   }
 
+  /* STAY THE SAME */
+
   /* Indigo */
   --color-brand-50: #eef2ff;
   --color-brand-100: #e0e7ff;

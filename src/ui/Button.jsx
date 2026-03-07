@@ -48,14 +48,55 @@ const variations = {
   `,
 }
 
+// Will make the primary button lighter when it is disabled
+function getButtonStyles({ $size, $variation, disabled }) {
+  // const sizeStyles = sizes[$size]
+
+  // Styles derived from props passed into the Button
+  let variantStyles = variations[$variation]
+
+  if (disabled) {
+    if ($variation === 'primary') {
+      variantStyles = `
+        color: var(--color-brand-100);
+        background-color: var(--color-brand-200);
+        &:hover {
+          background-color: var(--color-brand-200);
+        }
+      `
+    }
+  }
+
+  return `
+    ${sizes[$size]}
+    ${variantStyles}
+  `
+}
+
 const Button = styled.button`
   border: none;
   border-radius: var(--border-radius-sm);
   box-shadow: var(--shadow-sm);
 
-  ${(props) => sizes[props.$size]}
-  ${(props) => variations[props.$variation]}
+  ${getButtonStyles}
 `
+
+// const Button = styled.button`
+//   border: none;
+//   border-radius: var(--border-radius-sm);
+//   box-shadow: var(--shadow-sm);
+
+//   ${(props) => sizes[props.$size]}
+//   ${(props) => variations[props.$variation]}
+//   ${(props) =>
+//     props.disabled && props.$variation === 'primary'
+//       ? 'background-color: var(--color-brand-200)'
+//       : variations[props.$variation]};
+//   ${(props) =>
+//     props.disabled && props.$variation === 'primary'
+//       ? ' &:hover {background-color: var(--color-brand-200)}'
+//       : variations[props.$variation]};
+// `
 
 // Default styles
 Button.defaultProps = {
