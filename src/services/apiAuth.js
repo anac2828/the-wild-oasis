@@ -3,7 +3,6 @@ import { supabaseUrl } from './supabase'
 
 const BASE_URL = 'https://the-wild-oasis24.vercel.app'
 
-console.log(BASE_URL)
 // * SIGN UP
 export async function signup({ fullName, email, password }) {
   const { data, error } = await supabase.auth.signUp({
