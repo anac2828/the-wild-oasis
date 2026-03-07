@@ -1,7 +1,7 @@
 import supabase from './supabase'
 import { supabaseUrl } from './supabase'
 
-const BASE_URL = 'https://the-wild-oasis24.vercel.app'
+const BASE_URL = 'https://the-wild-oasis-ac26.netlify.app/'
 
 // * SIGN UP
 export async function signup({ fullName, email, password }) {
