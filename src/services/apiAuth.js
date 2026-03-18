@@ -1,7 +1,7 @@
 import supabase from './supabase'
 import { supabaseUrl } from './supabase'
 
-const BASE_URL = 'https://the-wild-oasis-ac26.netlify.app/'
+const BASE_URL = 'https://the-wild-oasis-ac26.netlify.app'
 
 // * SIGN UP
 export async function signup({ fullName, email, password }) {
@@ -34,9 +34,8 @@ export async function login({ email, password }) {
 
 export async function resetPassword(email) {
   const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${BASE_URL}/account`,
+    redirectTo: '/account',
   })
-  console.log(data, error)
 }
 
 // * LOGOUT
