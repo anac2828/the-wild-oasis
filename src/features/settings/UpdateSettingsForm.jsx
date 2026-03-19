@@ -22,50 +22,50 @@ function UpdateSettingsForm() {
   if (isLoading) return <Spinner />
 
   // EVENT HANDLER
-  function handleUpdate(value, field) {
-    if (!value) return
-    updateSetting({ [field]: value })
+
+  function handleUpdate(e) {
+    e.preventDefault()
+    const { value, defaultValue, id } = e.target
+    if (!value || value === defaultValue) return
+    updateSetting({ [id]: value })
   }
+
+  const inputProps = [
+    {
+      id: 'minBookingLength',
+      defaultValue: minBookingLength,
+      label: 'Minimum nights/booking',
+    },
+    {
+      id: 'maxBookingLength',
+      defaultValue: maxBookingLength,
+      label: 'Maximum nights/booking',
+    },
+    {
+      id: 'maxGuestsPerBooking',
+      defaultValue: maxGuestsPerBooking,
+      label: 'Maximum guests/booking',
+    },
+    {
+      id: 'breakfastPrice',
+      defaultValue: breakfastPrice,
+      label: 'Breakfast price',
+    },
+  ]
 
   return (
     <Form>
-      <FormRow label='Minimum nights/booking'>
-        <Input
-          type='number'
-          id='min-nights'
-          defaultValue={minBookingLength}
-          disabled={isUpdating}
-          // onBlur updates the value of the field when the user exists it
-          onBlur={(e) => handleUpdate(e.target.value, 'minBookingLength')}
-        />
-      </FormRow>
-      <FormRow label='Maximum nights/booking'>
-        <Input
-          type='number'
-          id='max-nights'
-          defaultValue={maxBookingLength}
-          disabled={isUpdating}
-          onBlur={(e) => handleUpdate(e.target.value, 'maxBookingLength')}
-        />
-      </FormRow>
-      <FormRow label='Maximum guests/booking'>
-        <Input
-          type='number'
-          id='max-guests'
-          defaultValue={maxGuestsPerBooking}
-          disabled={isUpdating}
-          onBlur={(e) => handleUpdate(e.target.value, 'maxGuestsPerBooking')}
-        />
-      </FormRow>
-      <FormRow label='Breakfast price'>
-        <Input
-          type='number'
-          id='breakfast-price'
-          defaultValue={breakfastPrice}
-          disabled={isUpdating}
-          onBlur={(e) => handleUpdate(e.target.value, 'breakfastPrice')}
-        />
-      </FormRow>
+      {inputProps.map((prop) => (
+        <FormRow label={prop.label} key={prop.label}>
+          <Input
+            type='number'
+            id={prop.id}
+            defaultValue={prop.defaultValue}
+            // disabled={isUpdating}
+            onBlur={handleUpdate}
+          />
+        </FormRow>
+      ))}
     </Form>
   )
 }

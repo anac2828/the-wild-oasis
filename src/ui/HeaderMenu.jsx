@@ -16,9 +16,9 @@ function HeaderMenu() {
     <StyledHeaderMenu>
       <li>
         {/* USER PROFILE BUTTON */}
-        <ButtonIcon onClick={() => navigate('/account')}>
+        {/* <ButtonIcon onClick={() => navigate('/account')}>
           <HiOutlineUser />
-        </ButtonIcon>
+        </ButtonIcon> */}
       </li>
       {/* DARK MODE BUTTON */}
       <li>
